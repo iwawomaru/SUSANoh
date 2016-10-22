@@ -1,0 +1,439 @@
+<?xml version="1.0"?>
+<sdf version="1.4">
+  <world name="default">
+
+
+  <include>
+    <uri>model://sun</uri>
+  </include>
+
+  <include>
+    <uri>model://robocup_3Dsim_ball</uri>
+  </include>
+  <include>
+    <uri>model://robocup14_spl_field</uri>
+  </include>
+
+  <include>
+    <uri>model://robocup_3Dsim_goal</uri>
+    <pose>4.5 0.0 0.0 0 0 0</pose>
+  </include>
+
+  <include>
+    <uri>model://robocup_3Dsim_goal</uri>
+    <pose>-4.5 0.0 0.0 0 0 3.14159</pose>
+  </include>
+
+  <!-- to prevent from going out field -->
+  <model name="wall">
+    <!-- wall for player1 -->
+    <link name='Wall_0_player1'>
+      <collision name='Wall_0_Collision_player1'>
+        <geometry>
+          <box>
+            <size>4.5 0.15 0.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <bounce/>
+          <friction>
+            <ode/>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Wall_0_Visual_player1'>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>4.5 0.15 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <!-- for tranparent walls -->
+        <!-- <transparency>1.0</transparency> -->
+      </visual>
+      <pose frame=''>2.25 -3.075 0 0 -0 3.14159</pose>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+        
+      <self_collide>0</self_collide>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+    </link>
+
+    <!-- wall1 for player1 -->
+    <link name='Wall_1_player1'>
+      <collision name='Wall_1_Collision_player1'>
+        <geometry>
+          <box>
+            <size>9 0.15 0.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <bounce/>
+          <friction>
+            <ode/>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Wall_1_Visual_player1'>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>4.5 0.15 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+        <ambient>1 1 1 1</ambient>
+        </material>
+      <!-- for tranparent walls -->
+      <!-- <transparency>1.0</transparency> -->
+      </visual>
+      <pose frame=''>2.25 3.075 0 0 -0 3.14159</pose>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+      <self_collide>0</self_collide>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+    </link>
+
+    <!-- wall for player1 -->
+    <link name='Wall_2_player1'>
+      <collision name='Wall_2_Collision_player1'>
+        <geometry>
+          <box>
+            <size>1.9 0.15 0.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <bounce/>
+          <friction>
+            <ode/>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Wall_2_Visual_player1'>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>1.9 0.15 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <!-- for tranparent walls -->
+        <!-- <transparency>1.0</transparency> -->
+      </visual>
+      <pose frame=''>4.55 2.05 0 0 -0 1.5707963267948966</pose>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+        
+      <self_collide>0</self_collide>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+    </link>
+
+    <!-- wall for player1 -->
+    <link name='Wall_3_player1'>
+      <collision name='Wall_3_Collision_player1'>
+        <geometry>
+          <box>
+            <size>1.9 0.15 0.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <bounce/>
+          <friction>
+            <ode/>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Wall_3_Visual_player1'>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>1.9 0.15 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Blue</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <!-- for tranparent walls -->
+        <!-- <transparency>1.0</transparency> -->
+      </visual>
+      <pose frame=''>4.55 -2.05 0 0 -0 1.5707963267948966</pose>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+        
+      <self_collide>0</self_collide>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+    </link>
+
+
+    <!-- wall0 for player2 -->
+    <link name='Wall_0_player2'>
+      <collision name='Wall_0_Collision_player2'>
+        <geometry>
+          <box>
+            <size>4.5 0.15 0.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <bounce/>
+          <friction>
+            <ode/>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Wall_0_Visual_player2'>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>4.5 0.15 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Red</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <!-- for tranparent walls -->
+        <!-- <transparency>1.0</transparency> -->
+      </visual>
+      <pose frame=''>-2.25 -3.075 0 0 -0 3.14159</pose>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+      <self_collide>0</self_collide>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+    </link>
+
+  <!-- wall1 for player2 -->
+    <link name='Wall_1_player2'>
+      <collision name='Wall_1_Collision_player2'>
+        <geometry>
+          <box>
+            <size>4.5 0.15 0.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <bounce/>
+          <friction>
+            <ode/>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Wall_1_Visual_player2'>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>4.5 0.15 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Red</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <!-- for tranparent walls -->
+        <!-- <transparency>1.0</transparency> -->
+      </visual>
+      <pose frame=''>-2.25 3.075 0 0 -0 3.14159</pose>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+      <self_collide>0</self_collide>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+    </link>
+
+    <!-- wall for player1 -->
+    <link name='Wall_2_player2'>
+      <collision name='Wall_2_Collision_player2'>
+        <geometry>
+          <box>
+            <size>1.9 0.15 0.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <bounce/>
+          <friction>
+            <ode/>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Wall_2_Visual_player2'>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>1.9 0.15 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Red</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <!-- for tranparent walls -->
+        <!-- <transparency>1.0</transparency> -->
+      </visual>
+      <pose frame=''>-4.55 2.05 0 0 -0 1.5707963267948966</pose>
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+        
+      <self_collide>0</self_collide>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+    </link>
+
+    <!-- wall for player2 -->
+    <link name='Wall_3_player2'>
+      <collision name='Wall_3_Collision_player2'>
+        <geometry>
+          <box>
+            <size>1.9 0.15 0.5</size>
+          </box>
+        </geometry>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <max_contacts>10</max_contacts>
+        <surface>
+          <bounce/>
+          <friction>
+            <ode/>
+            <torsional>
+              <ode/>
+            </torsional>
+          </friction>
+          <contact>
+            <ode/>
+          </contact>
+        </surface>
+      </collision>
+      <visual name='Wall_3_Visual_player2'>
+        <pose frame=''>0 0 0.25 0 -0 0</pose>
+        <geometry>
+          <box>
+            <size>1.9 0.15 0.5</size>
+          </box>
+        </geometry>
+        <material>
+          <script>
+            <uri>file://media/materials/scripts/gazebo.material</uri>
+            <name>Gazebo/Red</name>
+          </script>
+          <ambient>1 1 1 1</ambient>
+        </material>
+        <!-- for tranparent walls -->
+        <!-- <transparency>1.0</transparency> -->
+      </visual>
+      <pose frame=''>-4.55 -2.05 0 0 -0 1.5707963267948966</pose>
+      
+      <velocity_decay>
+        <linear>0</linear>
+        <angular>0</angular>
+      </velocity_decay>
+      <self_collide>0</self_collide>
+      <kinematic>0</kinematic>
+      <gravity>1</gravity>
+    </link>
+
+    <static>true</static>
+  </model>
+
+</world>
+</sdf>
