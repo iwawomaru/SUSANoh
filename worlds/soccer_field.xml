@@ -2,14 +2,15 @@
 <sdf version="1.4">
   <world name="default">
 
-
+  <!-- the modelincluded must exests in model path -->
   <include>
     <uri>model://sun</uri>
   </include>
 
-  <include>
+<!--   <include>
     <uri>model://robocup_3Dsim_ball</uri>
-  </include>
+  </include> -->
+
   <include>
     <uri>model://robocup14_spl_field</uri>
   </include>
@@ -49,6 +50,7 @@
           </contact>
         </surface>
       </collision>
+      <!-- Visual  -->
       <visual name='Wall_0_Visual_player1'>
         <pose frame=''>0 0 0.25 0 -0 0</pose>
         <geometry>
@@ -57,6 +59,7 @@
           </box>
         </geometry>
         <material>
+          <!-- enable to change color -->
           <script>
             <uri>file://media/materials/scripts/gazebo.material</uri>
             <name>Gazebo/Blue</name>
@@ -71,7 +74,6 @@
         <linear>0</linear>
         <angular>0</angular>
       </velocity_decay>
-        
       <self_collide>0</self_collide>
       <kinematic>0</kinematic>
       <gravity>1</gravity>
@@ -172,7 +174,6 @@
         <linear>0</linear>
         <angular>0</angular>
       </velocity_decay>
-        
       <self_collide>0</self_collide>
       <kinematic>0</kinematic>
       <gravity>1</gravity>
@@ -223,7 +224,6 @@
         <linear>0</linear>
         <angular>0</angular>
       </velocity_decay>
-        
       <self_collide>0</self_collide>
       <kinematic>0</kinematic>
       <gravity>1</gravity>
@@ -374,8 +374,7 @@
       <velocity_decay>
         <linear>0</linear>
         <angular>0</angular>
-      </velocity_decay>
-        
+      </velocity_decay>   
       <self_collide>0</self_collide>
       <kinematic>0</kinematic>
       <gravity>1</gravity>
@@ -422,7 +421,6 @@
         <!-- <transparency>1.0</transparency> -->
       </visual>
       <pose frame=''>-4.55 -2.05 0 0 -0 1.5707963267948966</pose>
-      
       <velocity_decay>
         <linear>0</linear>
         <angular>0</angular>
