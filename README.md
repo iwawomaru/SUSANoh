@@ -14,5 +14,5 @@
 
 - make a python script to see ball location
 
-- I don't confirm gazebo-2.2
+- confirm gazebo-2.2
 

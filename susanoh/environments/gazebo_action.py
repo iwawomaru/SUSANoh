@@ -1,15 +1,20 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+import sys
 
 import rospy
 from geometry_msgs.msg import Twist
 
-class Gazebo_Action():
+
+class Gazebo_Action:
     def __init__(self, robot_name="mobile_base"):
-    	# rostopic name for turtlebot
-        topic_name = robot_name+'command/velocity'
+        # rostopic name for turtlebot
+        topic_name = robot_name+'/commands/velocity'
         # they must be called
-        rospy.init_node(robot_name+'vel_publisher')
+        rospy.init_node(robot_name+'_vel_publisher')
         self.pub = rospy.Publisher(topic_name, Twist, queue_size=10)
+
 
     '''
     action(Int) define robot action
@@ -20,6 +25,7 @@ class Gazebo_Action():
     4:              left
     '''
     def control_action(self,action):
+    	self.move_to_neutral()
         if action == 0:
             self.move_to_neutral()
         elif action == 1:
@@ -45,13 +51,14 @@ class Gazebo_Action():
         vel.angular.z = 0
 
         self.pub.publish(vel)
+        rospy.sleep(1.0)
 
 
     def move_forward(self):
         vel = Twist()
         vel.linear.x = 1.0
         self.pub.publish(vel)
-        # rospy.sleep(7.0)
+        rospy.sleep(7.0)
 
 
     def move_backword(self):
@@ -62,11 +69,21 @@ class Gazebo_Action():
 
     def rotate_right(self):
         vel = Twist()
-        vel.angular.z = 2.0
+        vel.angular.z = -2.0
         self.pub.publish(vel)
 
 
     def rotate_left(self):
         vel = Twist()
-        vel.angular.z = -2.0
+        vel.angular.z = 2.0
         self.pub.publish(vel)
+
+
+def main():
+    ga = Gazebo_Action()
+    ga.control_action(4)
+    rospy.spin()
+
+
+if __name__ == "__main__":
+    sys.exit(main())
