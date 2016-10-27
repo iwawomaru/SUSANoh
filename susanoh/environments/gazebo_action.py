@@ -4,6 +4,7 @@
 import sys
 
 import rospy
+import rospy.exceptions
 from geometry_msgs.msg import Twist
 
 
@@ -11,8 +12,14 @@ class Gazebo_Action:
     def __init__(self, robot_name="mobile_base"):
         # rostopic name for turtlebot
         topic_name = robot_name+'/commands/velocity'
-        # they must be called
-        rospy.init_node(robot_name+'_vel_publisher')
+        try:
+            # they must be called
+            rospy.init_node(robot_name+'_vel_publisher')
+        except rospy.exceptions.ROSException as e:
+            print(e)
+        except rospy.exceptions.ROSInitException as e:
+            print(e)
+
         self.pub = rospy.Publisher(topic_name, Twist, queue_size=10)
 
 
