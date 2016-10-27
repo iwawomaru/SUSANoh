@@ -37,7 +37,7 @@ def reset_world():
 def reset_simulation():
     rospy.wait_for_service('gazebo/reset_simulation')
     try:
-        # ServiceProxy and call means `rosservice call /gazebo/reset_world`
+        # ServiceProxy and call means `rosservice call /gazebo/simulation_world`
         srv = rospy.ServiceProxy('gazebo/reset_simulation', std_srvs.srv.Empty)
         srv.call()
         rospy.loginfo("reset simulation")
