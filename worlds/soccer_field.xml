@@ -7,9 +7,10 @@
     <uri>model://sun</uri>
   </include>
 
-<!--   <include>
+  <include>
     <uri>model://robocup_3Dsim_ball</uri>
-  </include> -->
+    <pose>1 0 0 0 0 0</pose>
+  </include>
 
   <include>
     <uri>model://robocup14_spl_field</uri>
