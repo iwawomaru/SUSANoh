@@ -1,3 +1,3 @@
-from noh.components.random_component import Random
-from noh.components.const_component import Const
-from noh.components.suppression_boosting import SuppressionBoosting
+from susanoh.components.random_component import Random
+from susanoh.components.const_component import Const
+from susanoh.components.suppression_boosting import SuppressionBoosting

@@ -1,4 +1,4 @@
-from noh.component import Component
+from susanoh.component import Component
 
 
 class Collection(object):

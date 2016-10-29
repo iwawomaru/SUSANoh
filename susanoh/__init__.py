@@ -1,6 +1,6 @@
-from noh import component
-from noh import environment
-from noh import circuit
+from susanoh import component
+from susanoh import environment
+from susanoh import circuit
 
 Circuit = circuit.Circuit
 PropRule = circuit.PropRule

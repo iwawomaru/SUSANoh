@@ -1,6 +1,6 @@
-from noh import Circuit
-from noh.circuit import PropRule
-from noh.components import Random, Const
+from susanoh import Circuit
+from susanoh.circuit import PropRule
+from susanoh.components import Random, Const
 import numpy as np
 
 

@@ -1,4 +1,4 @@
-from noh import Component
+from susanoh import Component
 
 class Const(Component):
     def __init__(self, n_input, n_output, const_output):

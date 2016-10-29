@@ -1,4 +1,4 @@
-from noh import Component
+from susanoh import Component
 import numpy as np
 
 class Random(Component):

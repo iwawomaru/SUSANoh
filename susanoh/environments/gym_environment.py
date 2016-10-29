@@ -1,4 +1,4 @@
-from noh.environment import Environment
+from susanoh.environment import Environment
 import gym
 import numpy as np
 
