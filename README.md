@@ -4,15 +4,19 @@
 
 ## Notice by ueno
 
-- make a gazebo worldfile(worlds/soccer_field.xml)
+[] catch camera data
 
-- make rospackage to call a above worldfile
-    - it need to create catkin workspace
+[] make LRF Rulebase
+    [] catch LRF value
 
-- make a python script to control turtlebot(/environments/gazebo_action.py)
-    - it need to install ros package for turtlebot
+[] add ball friction in world file
+    [] confirm friction of ball in gazebo-7
+**caution**
+If a user uses Gazebo-2, Gazebo-2 can't use friction of ball.
+Gazebo-7 may use it.
 
-- make a python script to see ball location
+[] install Gzweb environment in server
 
-- confirm gazebo-2.2
+[] make ROS package to launch environment
+    [] catch model file from this repository 
 
