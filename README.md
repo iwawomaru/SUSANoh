@@ -4,16 +4,16 @@
 
 ## Notice by ueno
 
-[] catch camera data
+[C] catch camera data
 
 [] make LRF Rulebase
     [] catch LRF value
 
-[] add ball friction in world file
-    [] confirm friction of ball in gazebo-7
+[C] add ball friction in world file
+    [C] confirm friction of ball in gazebo-7
 **caution**
-If a user uses Gazebo-2, Gazebo-2 can't use friction of ball.
-Gazebo-7 may use it.
+ball friction is not supported in any gazebo. <velocity_decay> tag realize similar things.
+But this tag applicates a model in the air. 
 
 [] install Gzweb environment in server
 
