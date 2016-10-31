@@ -1,7 +1,9 @@
-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import rospy
 import std_srvs.srv
 from gazebo_ros import gazebo_interface
+from gazebo_msgs import SpawnModel
 
 # add soccer ball
 def add_ball():
@@ -44,3 +46,11 @@ def reset_simulation():
     except rospy.ServiceExceptions as e:
         print("Service call failed %s"%e)
 
+
+def spawn_turtlebot():
+    rospy.wait_for_service('/gazebo/spawn_urdf_model')
+    sp = SpawnModel
+    sp.model_name = 'turtlebot'
+    try:
+        srv = rospy.ServiceProxy('/gazebo/spawn_urdf_model', std_srvs.srv.Empty)
+        srv.call()

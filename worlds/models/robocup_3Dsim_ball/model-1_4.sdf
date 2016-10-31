@@ -31,6 +31,10 @@
           </mesh>
         </geometry>
       </visual>
+      <velocity_decay>
+        <linear>0.001</linear>
+        <angular>0.001</angular>
+      </velocity_decay>
     </link>
   </model>
 </sdf>

@@ -2,58 +2,14 @@
 <sdf version="1.4">
   <world name="default">
 
-
   <include>
     <uri>model://sun</uri>
   </include>
 
-  <model name="soccer_ball">
-    <static>false</static>
-    <link name="soccer_ball_link">
-      <pose>0 0 0 0 0 0</pose>
-      <inertial>
-        <mass>0.026</mass>
-        <!-- inertia based on solid sphere 2/5 mr^2 -->
-        <inertia>
-          <ixx>1.664e-5</ixx>
-          <iyy>1.664e-5</iyy>
-          <izz>1.664e-5</izz>
-          <ixy>0</ixy>
-          <ixz>0</ixz>
-          <iyz>0</iyz>
-        </inertia>
-      </inertial>
-      <collision name="collision">
-        <geometry>
-<!--           <sphere>
-            <radius>0.04</radius>
-          </sphere> -->
-          <box>
-            <size>0.04 0.04 0.04</size>
-          </box>
-        </geometry>
-        <surface>
-          <friction>
-            <ode>
-              <mu>1</mu>
-              <mu2>1</mu2>
-              <fdir1>1 1 1</fdir1>
-              <slip1>1.0</slip1>
-              <slip2>1.0</slip2>
-            </ode>
-          </friction>
-        </surface>
-      </collision>
-      <visual name="visual">
-        <geometry>
-          <mesh>
-            <scale>0.04 0.04 0.04</scale>
-            <uri>model://robocup_3Dsim_ball/meshes/ball.dae</uri>
-          </mesh>
-        </geometry>
-      </visual>
-    </link>
-  </model>
+  <include>
+    <uri>model://robocup_3Dsim_ball</uri>
+    <pose>1 0 0 0 0 0</pose>
+  </include>
   
   <include>
     <uri>model://robocup14_spl_field</uri>
