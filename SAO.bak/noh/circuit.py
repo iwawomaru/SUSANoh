@@ -47,8 +47,8 @@ class Collection(object):
         del self.keys[key]
         del self.values[key]
 
-    def __iter__(self):
-        return iter(self.keys)
+    #def __iter__(self):
+    #    return iter(self.keys)
 
     # def __getslice__(self, i, j):
     #     raise NotImplementedError("To be implemented")
@@ -59,8 +59,8 @@ class Collection(object):
     # def __delslice__(self, i, j):
     #     raise NotImplementedError("To be implemented")
 
-    def __getattr__(self, key):
-        return self.__getitem__(key)
+    #def __getattr__(self, key):
+    #    return self.__getitem__(key)
 
 
 class PropRule(Collection):
