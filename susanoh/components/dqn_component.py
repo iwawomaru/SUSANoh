@@ -13,11 +13,11 @@ from agent import Agent
 
 # This is Component 
 class DQN(Component):
-    def __init__(self, n_input, n_output):
+    def __init__(self, n_input, n_output, L1_rate=None):
         self.n_input = n_input
         self.n_output = n_output
         self.agent = DQNAgent(n_output, epsilon=0.01, model_path="", on_gpu=False)
-        self.trainer = DQNTrainer(self.agent)
+        self.trainer = DQNTrainer(self.agent, L1_rate=L1_rate)
         
     def __call__(self, data, **kwargs):
         #self.rng = np.random.RandomState(123)
