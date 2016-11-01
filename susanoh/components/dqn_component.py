@@ -1,4 +1,4 @@
-from noh import Component
+from susanoh import Component
 
 import os
 import numpy as np
@@ -6,7 +6,7 @@ from chainer import Chain
 from chainer import Variable
 from chainer import cuda
 from chainer import serializers
-from chainer import optimizers
+from chainer import optimizer, optimizers
 import chainer.functions as F
 from agent import Agent
 
@@ -21,7 +21,6 @@ class DQN(Component):
         
     def __call__(self, data, **kwargs):
         #self.rng = np.random.RandomState(123)
-        #return self.rng.randint(0, self.n_output)
         self.action = self.trainer.start(data)
         return self.trainer.start(data)
         
@@ -75,9 +74,16 @@ class Q(Chain):
     def arp_to_gpu(self, arp):
         return arp if not self.on_gpu else cuda.to_gpu(arp)
 
+
 class DQNAgent(Agent):
 
-    def __init__(self, actions, epsilon=1, n_history=4, on_gpu=False, model_path="", load_if_exist=True):
+    def __init__(self, 
+            actions, 
+            epsilon=1, 
+            n_history=4, 
+            on_gpu=False, 
+            model_path="", 
+            load_if_exist=True):
         self.actions = actions
         self.epsilon = epsilon
         self.q = Q(n_history, actions, on_gpu)
@@ -162,8 +168,17 @@ class DQNAgent(Agent):
 
 class DQNTrainer(Agent):
 
-    def __init__(self, agent, memory_size=10**4, replay_size=32, gamma=0.99, initial_exploration=10**4, target_update_freq=10**4,
-                 learning_rate=0.00025, epsilon_decay=1e-6, minimum_epsilon=0.1):
+    def __init__(self, 
+            agent, 
+            memory_size=10**4, 
+            replay_size=32, 
+            gamma=0.99, 
+            initial_exploration=10**4, 
+            target_update_freq=10**4,
+            learning_rate=0.00025, 
+            epsilon_decay=1e-6, 
+            minimum_epsilon=0.1,
+            L1_rate=None):
         self.agent = agent
         self.target = Q(self.agent.q.n_history, self.agent.q.n_action, on_gpu=self.agent.q.on_gpu)
 
@@ -177,7 +192,7 @@ class DQNTrainer(Agent):
         self.minimum_epsilon = minimum_epsilon
         self._step = 0
 
-        # prepare ,e,pry for replay
+        # prepare for replay
         n_hist = self.agent.q.n_history
         size = self.agent.q.SIZE
         self.memory = [
@@ -194,6 +209,8 @@ class DQNTrainer(Agent):
         #prepare optimizer
         self.optimizer  = optimizers.RMSpropGraves(lr=learning_rate, alpha=0.95, momentum=0.95, eps=0.01)
         self.optimizer.setup(self.agent.q)
+        if L1_rate is not None:
+            self.optimizer.add_hook(optimizer.Lasso(L1_rate))
         self._loss = 9
         self._qv = 0
 
