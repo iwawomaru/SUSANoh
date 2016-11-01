@@ -30,7 +30,6 @@ class GazeboAction:
 
         self.pub = rospy.Publisher(topic_name_vel, Twist, queue_size=10)
 
-
         '''
         action(Int) define robot action
         0: robot don't move.
@@ -40,7 +39,7 @@ class GazeboAction:
         4:              left
         '''
     def control_action(self,action):
-        self.move_to_neutral()
+    	# self.move_to_neutral()
         if action == 0:
             self.move_to_neutral()
         elif action == 1:
@@ -55,7 +54,6 @@ class GazeboAction:
             rospy.loginfo("unexpected action=%d.",action)
             self.move_to_neutral()
 
-
     def move_to_neutral(self):
         vel = Twist()
         vel.linear.x = 0
@@ -64,35 +62,29 @@ class GazeboAction:
         vel.angular.x = 0
         vel.angular.y = 0
         vel.angular.z = 0
-
         self.pub.publish(vel)
-        rospy.sleep(1.0)
-
+        # rospy.sleep(1.0)
 
     def move_forward(self):
         vel = Twist()
         vel.linear.x = 1.0
         self.pub.publish(vel)
-        rospy.sleep(7.0)
-
+        # rospy.sleep(7.0)
 
     def move_backword(self):
         vel = Twist()
         vel.linear.x = -1.0
         self.pub.publish(vel)
 
-
     def rotate_right(self):
         vel = Twist()
         vel.angular.z = -2.0
         self.pub.publish(vel)
 
-
     def rotate_left(self):
         vel = Twist()
         vel.angular.z = 2.0
         self.pub.publish(vel)
-
 
     # return [[b, g, r],[b, g, r] ...]
     def get_image_array(self):
@@ -101,18 +93,36 @@ class GazeboAction:
         rospy.sleep(0.1)
         return self.cv_image
 
-
     # subscriber callback function(this cause a bug)
     def image_callback(self, data):
         try:
             self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         except CvBridgeError as e:
-        	print(e)
+            print(e)
 
         ## if you need the image turtlebot sees, comment out these
-        cv2.imshow("image window", self.cv_image)
-        cv2.waitKey(3)
+        # cv2.imshow("image window", self.cv_image)
+        # cv2.waitKey(3)
 
+    def __del__(self):
+        # Kill gzclient, gzserver and roscore                                   
+        tmp = os.popen("ps -Af").read()
+        gzclient_count = tmp.count('gzclient')
+        gzserver_count = tmp.count('gzserver')
+        roscore_count = tmp.count('roscore')
+        rosmaster_count = tmp.count('rosmaster')
+        if gzclient_count > 0:
+            os.system("killall -9 gzclient")
+        if gzserver_count > 0:
+            os.system("killall -9 gzserver")
+        if rosmaster_count > 0:
+            os.system("killall -9 rosmaster")
+        if roscore_count > 0:
+            os.system("killall -9 roscore")
+
+        if (gzclient_count or gzserver_count or 
+            roscore_count or rosmaster_count >0):
+            os.wait()
 
 def main():
     ga = GazeboAction()
