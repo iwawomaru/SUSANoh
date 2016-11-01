@@ -1,6 +1,9 @@
 from susanoh.environment import Environment
 from susanoh.environments.gazebo_action import GazeboAction
 
+import rospy
+import roslaunch
+
 import subprocess
 import os
 import time
@@ -25,7 +28,9 @@ class GazeboEnv(Environment):
         # rospy.init_node("??????", anonymous=True)
 
         fullpath = os.path.join(os.getcwd(), "../worlds", gazebo_launch_name)
-        subprocess.Popen(["roslaunch", fullpath])
+        subprocess.Popen(["roslaunch", fullpath, "dir:=/home/osawa/SUSANoh/worlds"])
+
+        rospy.wait_for_service('/gazebo/unpause_physics')        
 
         self.action_getter = GazeboAction()
         self.frame = 0
@@ -34,9 +39,13 @@ class GazeboEnv(Environment):
         self.episode_number = 0
 
     def step(self, action):
-        #self.action_getter(action)
-        #return self.action_getter.get_image_array()
-        pass
+        self.action_getter.control_action(action)
+        obs = self.action_getter.get_image_array()
+        print "obs obs = ", obs.shape
+        reward = 0
+        done = False
+        info = None
+        return obs, reward, done, info
 
     def reinforcement_train(self):
         """
@@ -53,11 +62,11 @@ class GazeboEnv(Environment):
         print self.__class__.episode_size
         for frame in xrange(self.__class__.episode_size):
             # if self.render: self.print_stat()
-            # action = self.model(observation)
-            # observation, reward, done, info = self.step(action)
-            # self.model.set_reward(reward)
-            # episode_reward += reward
-            # time.sleep(0.1)
+            action = self.model(observation)
+            print "action = ", action
+            observation, reward, done, info = self.step(action)
+            self.model.set_reward(reward)
+            episode_reward += reward
             if done: break
 
         self.model.reinforcement_train()
@@ -92,11 +101,11 @@ class GazeboEnv(Environment):
             os.wait()
 
 class SoccerEnv(GazeboEnv):
-    n_stat = 0
-    n_act = 0
+    n_stat = 100
+    n_act = 5
     episode_size = 10000
 
     def __init__(self, model, render=False):
-        super(SoccerEnv, self).__init__(model, "test_osawa.launch", render)
+        super(SoccerEnv, self).__init__(model, "test.launch", render)
 
         """ TODO: launch ros """

@@ -110,8 +110,8 @@ class GazeboAction:
         	print(e)
 
         ## if you need the image turtlebot sees, comment out these
-        # cv2.imshow("image window", self.cv_image)
-        # cv2.waitKey(3)
+        cv2.imshow("image window", self.cv_image)
+        cv2.waitKey(3)
 
 
 def main():
