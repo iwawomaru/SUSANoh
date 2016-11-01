@@ -7,7 +7,7 @@
   </include>
 
   <include>
-    <uri>model://robocup_3Dsim_ball</uri>
+    <uri>model://soccer_ball</uri>
     <pose>1 0 0 0 0 0</pose>
   </include>
   

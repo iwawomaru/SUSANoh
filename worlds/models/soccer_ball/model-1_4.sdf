@@ -19,15 +19,15 @@
       <collision name="collision">
         <geometry>
           <sphere>
-            <radius>0.04</radius>
+            <radius>0.1</radius>
           </sphere>
         </geometry>
       </collision>
       <visual name="visual">
         <geometry>
           <mesh>
-            <scale>0.04 0.04 0.04</scale>
-            <uri>model://robocup_3Dsim_ball/meshes/ball.dae</uri>
+            <scale>0.1 0.1 0.1</scale>
+            <uri>model://soccer_ball/meshes/ball.dae</uri>
           </mesh>
         </geometry>
       </visual>
