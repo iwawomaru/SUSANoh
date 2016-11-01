@@ -14,7 +14,7 @@ from cv_bridge import CvBridge, CvBridgeError
 
 
 
-class Gazebo_Action:
+class GazeboAction:
     def __init__(self, robot_name="mobile_base", camera_name="camera"):
         # rostopic name for turtlebot
         topic_name_vel = robot_name+'/commands/velocity'
@@ -115,7 +115,7 @@ class Gazebo_Action:
 
 
 def main():
-    ga = Gazebo_Action()
+    ga = GazeboAction()
     ga.control_action(4)
     print(ga.get_image_array())
     rospy.spin()
