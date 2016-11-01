@@ -31,16 +31,16 @@ class GazeboAction:
         self.pub = rospy.Publisher(topic_name_vel, Twist, queue_size=10)
 
 
-    '''
-    action(Int) define robot action
-    0: robot don't move.
-    1: robot move fowrard
-    2:            backward
-    3: robot rotate right
-    4:              left
-    '''
+        '''
+        action(Int) define robot action
+        0: robot don't move.
+        1: robot move fowrard
+        2:            backward
+        3: robot rotate right
+        4:              left
+        '''
     def control_action(self,action):
-    	self.move_to_neutral()
+        self.move_to_neutral()
         if action == 0:
             self.move_to_neutral()
         elif action == 1:
