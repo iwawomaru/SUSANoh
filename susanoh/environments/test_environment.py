@@ -13,7 +13,7 @@ from susanoh.environment import Environment
 class TestEnv(Environment):
     n_stat = 100
     n_act = 5
-    episode_size = 10
+    episode_size = 50
     dummy_output = np.zeros((256, 256, 3), dtype=np.float32)
 
     def __init__(self, model):
@@ -25,7 +25,7 @@ class TestEnv(Environment):
         self.action_getter.control_action(action)
         obs = self.action_getter.get_image_array()
         reward = np.random.normal(0, 1)
-        done = np.random.randn() < 0.1
+        done = np.random.rand() < 0.05
         info = None
         return obs, reward, done, info
 
@@ -59,7 +59,7 @@ class TestEnv(Environment):
 
 
 class TestAction(object):
-    dummy_output = np.zeros((256, 256, 3), dtype=np.float32)
+    dummy_output_shape = (256, 256, 3)
 
     def __init__(self):
         # NOP
@@ -70,5 +70,5 @@ class TestAction(object):
         pass
 
     def get_image_array(self):
-        return self.dummy_output
+        return np.random.rand(*self.dummy_output_shape)
 
