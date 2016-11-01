@@ -93,6 +93,7 @@ class Gazebo_Action:
         vel.angular.z = 2.0
         self.pub.publish(vel)
 
+
     # return [[b, g, r],[b, g, r] ...]
     def get_image_array(self):
         self.bridge = CvBridge()
@@ -101,13 +102,14 @@ class Gazebo_Action:
         return self.cv_image
 
 
+    # subscriber callback function(this cause a bug)
     def image_callback(self, data):
         try:
             self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         except CvBridgeError as e:
         	print(e)
 
-        # print(cv_image)
+        ## if you need the image turtlebot sees, comment out these
         # cv2.imshow("image window", self.cv_image)
         # cv2.waitKey(3)
 

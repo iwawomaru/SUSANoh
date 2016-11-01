@@ -45,17 +45,16 @@ def reset_world():
         print("Service call failed %s"%e)
 
 
-# reset gazebo simulation(it resets1 models and **time**)
+# reset gazebo simulation(it resets models and **time**)
 def reset_simulation():
     rospy.wait_for_service('/gazebo/reset_simulation')
     rospy.wait_for_service('/gazebo/set_model_state')
     try:
         # ServiceProxy and call means `rosservice call /gazebo/simulation_world`
-
         srv = rospy.ServiceProxy('/gazebo/reset_simulation', std_srvs.srv.Empty)
         srv.call()
 
-        # set the robot state randamly
+        # set the robot randomly
         model_pose = Pose()
         model_pose.position.x = np.random.rand()
         model_pose.position.y = np.random.rand()
