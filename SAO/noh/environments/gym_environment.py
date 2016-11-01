@@ -1,8 +1,9 @@
 from noh.environment import Environment
 import gym
+print gym
 import numpy as np
 
-
+print Environment
 class GymEnv(Environment):
 
     n_stat = 0
@@ -16,6 +17,7 @@ class GymEnv(Environment):
     def __init__(self, model, gym_env_name, render=False):
         super(GymEnv, self).__init__(model, render)
         self.env = gym.make(gym_env_name)
+        print self.env
         self.action = None
         self.frame = 0
         self.default_positive_reward = 1.
@@ -23,6 +25,7 @@ class GymEnv(Environment):
         self.episode_number = 0
 
     def step(self, action):
+        print self.env
         return self.env.step(action)
 
     def reinforcement_train(self):
@@ -34,7 +37,7 @@ class GymEnv(Environment):
     def execute(self, epochs=None):
         episode_reward = 0
 
-        observation = self.env.reset()
+        observation = self.reset()
         done = False
         reward = 0
 
@@ -43,6 +46,8 @@ class GymEnv(Environment):
             action = self.model(observation)
             observation, reward, done, info = self.step(action)
             self.model.set_reward(reward) # does model should have history of reward? environment is better?
+            if frame % 4 == 0:
+                self.model.reinforcement_train(observation)
             episode_reward += reward
             if done: break
 
@@ -50,7 +55,7 @@ class GymEnv(Environment):
             self.model.set_reward(self.default_negative_reward)
             episode_reward += (-reward + self.default_negative_reward)
 
-        self.model.reinforcement_train()
+
         self.episode_number += 1
         print ('ep %d: game finished, reward: %f' %
                (self.episode_number, episode_reward))
