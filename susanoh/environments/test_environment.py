@@ -24,8 +24,8 @@ class TestEnv(Environment):
     def step(self, action):
         self.action_getter.control_action(action)
         obs = self.action_getter.get_image_array()
-        reward = 0
-        done = False
+        reward = np.random.normal(0, 1)
+        done = np.random.randn() < 0.1
         info = None
         return obs, reward, done, info
 
