@@ -15,7 +15,8 @@ from cv_bridge import CvBridge, CvBridgeError
 
 
 class GazeboAction:
-    def __init__(self, robot_name="mobile_base", camera_name="camera"):
+    def __init__(self, robot_name="mobile_base"):
+        camera_name="camera"
         # rostopic name for turtlebot
         topic_name_vel = robot_name+'/commands/velocity'
         self.topic_name_cam = camera_name+'/rgb/image_raw'
@@ -32,7 +33,7 @@ class GazeboAction:
 
     '''
     action(Int) define robot action
-    0: robot don't move.
+    0: robot doesn't move.
     1: robot move fowrard
     2:            backward
     3: robot rotate right
@@ -100,7 +101,7 @@ class GazeboAction:
         except CvBridgeError as e:
             print(e)
 
-        ## if you need the image turtlebot sees, comment out these
+        ## if you need the image turtlebot sees, uncomment these
         # cv2.imshow("image window", self.cv_image)
         # cv2.waitKey(3)
 
