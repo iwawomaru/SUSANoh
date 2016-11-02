@@ -3,17 +3,17 @@
 # gazebo_utils API
 
 ## get_ball_location(number=0)
-
+  
 Get the ball location.
-
-
-Args:
+  
+  
+### Args:  
 number(int) : ball number you want to know location(defalut=0)
-
-
-Returns:
-x(float) : the location x
-y(float) : the location y
+  
+  
+### Returns:
+x(float) : the location x  
+y(float) : the location y  
 
 
 ## reset_world(robot_x=0,robot_y=0,robot_angle=0,ball_x=1,ball_y=0)
@@ -22,43 +22,43 @@ Reset simulation world.
 It set any location of robots and balls you would like.
 The simulation time isn't reset.
 Any location mustn't be conflict.
-
-
-Args:
-robot_x(float) : the robot location x(defalut=0.0)
-robot_y(float) : the robot location y(default=0.0)
-robot_angle(gloat) : the robot angle. the unit is radian(defalut=0.0)
-ball_x(float) : the ball location x(defalut=1.0)
-ball_y(float) : the ball location y(defalut=(0.0)
-
-
-Returns: void
-
-
+  
+  
+### Args:  
+robot_x(float) : the robot location x(defalut=0.0)  
+robot_y(float) : the robot location y(default=0.0)  
+robot_angle(gloat) : the robot angle. the unit is radian(defalut=0.0)  
+ball_x(float) : the ball location x(defalut=1.0)  
+ball_y(float) : the ball location y(defalut=(0.0)  
+  
+  
+### Returns: void
+  
+  
 ## reset_simulation(robot_x=0,robot_y=0,robot_angle=0,ball_x=1,ball_y=0)
-
-Reset simulation world.
-It set any location of robots and balls you would like.
-The simulation time is also reset.
-Any location mustn't be conflict.
-
-
-Args:
-robot_x(float) : the robot location x(defalut=0.0)
-robot_y(float) : the robot location y(default=0.0)
-robot_angle(gloat) : the robot angle. the unit is radian(defalut=0.0)
-ball_x(float) : the ball location x(defalut=1.0)
-ball_y(float) : the ball location y(defalut=(0.0)
-
-
-Returns: void
+  
+Reset simulation world.  
+It set any location of robots and balls you would like.  
+The simulation time is also reset.  
+Any location mustn't be conflict.  
+  
+  
+### Args:  
+robot_x(float) : the robot location x(defalut=0.0)  
+robot_y(float) : the robot location y(default=0.0)  
+robot_angle(gloat) : the robot angle. the unit is radian(defalut=0.0)  
+ball_x(float) : the ball location x(defalut=1.0)  
+ball_y(float) : the ball location y(defalut=(0.0)  
+  
+  
+### Returns: void
 
 
 # gazebo_action API
 
 ## __init__(robot_name="mobile_base")
 
-Args:
+### Args:  
 robot_name(string) : target robot name(defalut="mobile_base")
 
 
@@ -66,24 +66,24 @@ robot_name(string) : target robot name(defalut="mobile_base")
 
 kill `gazebo` process(`gzclient` and `gzserver`)
 
-Args: void
+### Args: void
 
 
 ## control_action(action)
 
 Control a turtlebot action
 
-Args:
+### Args:  
 action(int) : robot action  
 
-   0: turtlebot doesn't move.
-   1: turtlebot moves fowrard
-   2:            backward
-   3: turtlebot rotates right
-   4:              left
+   0: turtlebot doesn't move.  
+   1: turtlebot moves fowrard  
+   2:            backward  
+   3: turtlebot rotates right  
+   4:              left  
 
 
-Returns: void
+### Returns: void  
 
 
 ## move_to_neutral()
@@ -91,9 +91,9 @@ Returns: void
 A turtlebot doesn't move or stops.
 It is used in `control_action` when `action=0`.  
 
-Args: void
+### Args: void
 
-Returns: void
+### Returns: void
 
 
 ## move_foward()
@@ -101,9 +101,9 @@ Returns: void
 A turtlebot moves forward.
 It is used in `control_action` when `action=1`.  
 
-Args: void
+### Args: void
 
-Returns: void
+### Returns: void
 
 
 ## move_backward()
@@ -111,9 +111,9 @@ Returns: void
 A turtlebot moves backward.
 It is used in `control_action` when `action=2`.
 
-Args: void
+### Args: void
 
-Returns: void
+### Returns: void
 
 
 ## rotate_right()
@@ -121,9 +121,9 @@ Returns: void
 A turtlebot roates backward.
 It is used in `control_action` when `action=3`.
 
-Args: void
+### Args: void
 
-Returns: void
+### Returns: void
 
 
 ## roate_left()
@@ -131,18 +131,16 @@ Returns: void
 A turtlebot rotates backward.
 It is used in `control_action` when `action=4`.
 
-Args: void
+### Args: void
 
-Returns: void
+### Returns: void
 
 
 ## get_image_array()
 
 Get the image the turtlebot sees
 
-Args: void
+### Args: void
 
-Returns:
+### Returns:  
 image_array(numpy array): [[b, g, r],[b, g, r] ...]
-
-
