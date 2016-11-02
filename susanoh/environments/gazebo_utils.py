@@ -34,42 +34,72 @@ def get_ball_location(number=0):
 
 
 # reset gazebo world(it resets models)
-def reset_world():
+def reset_world(robot_x=0,robot_y=0,robot_angle=0,ball_x=1,ball_y=0):
     rospy.wait_for_service('gazebo/reset_world')
-    try:
-        # ServiceProxy and call means `rosservice call /gazebo/reset_world`
-        srv = rospy.ServiceProxy('gazebo/reset_world', std_srvs.srv.Empty)
-        srv.call()
-        rospy.loginfo("reset world")
-    except rospy.ServiceExceptions as e:
-        print("Service call failed %s"%e)
+    # ServiceProxy and call means `rosservice call /gazebo/reset_world`
+    srv = rospy.ServiceProxy('gazebo/reset_world', std_srvs.srv.Empty)
+    srv.call()
+
+    # set the robot
+    model_pose = Pose()
+    model_pose.position.x = robot_x
+    model_pose.position.y = robot_y
+    model_pose.orientation.z = np.sin(robot_angle/2.0) 
+    model_pose.orientation.w = np.cos(robot_angle/2.0) 
+    modelstate = ModelState()
+    modelstate.model_name = 'mobile_base'
+    modelstate.reference_frame = 'world'
+    modelstate.pose = model_pose
+    set_model_srv = rospy.ServiceProxy('gazebo/set_model_state', SetModelState)
+    set_model_srv.call(modelstate)
+
+
+    # set the ball
+    model_pose = Pose()
+    model_pose.position.x = ball_x
+    model_pose.position.y = ball_y
+    modelstate = ModelState()
+    modelstate.model_name = 'soccer_ball'
+    modelstate.reference_frame = 'world'
+    modelstate.pose = model_pose
+    set_model_srv = rospy.ServiceProxy('gazebo/set_model_state', SetModelState)
+    set_model_srv.call(modelstate)
+    rospy.loginfo("reset world")
 
 
 # reset gazebo simulation(it resets models and **time**)
-def reset_simulation():
+def reset_simulation(robot_x=0,robot_y=0,robot_angle=0,ball_x=1,ball_y=0):
     rospy.wait_for_service('/gazebo/reset_simulation')
     rospy.wait_for_service('/gazebo/set_model_state')
-    try:
-        # ServiceProxy and call means `rosservice call /gazebo/simulation_world`
-        srv = rospy.ServiceProxy('/gazebo/reset_simulation', std_srvs.srv.Empty)
-        srv.call()
+    # ServiceProxy and call means `rosservice call /gazebo/simulation_world`
+    srv = rospy.ServiceProxy('/gazebo/reset_simulation', std_srvs.srv.Empty)
+    srv.call()
 
-        # set the robot randomly
-        model_pose = Pose()
-        model_pose.position.x = np.random.rand()
-        model_pose.position.y = np.random.rand()
-        model_pose.position.z = 0
-        
-        modelstate = ModelState()
-        modelstate.model_name = 'mobile_base'
-        modelstate.reference_frame = 'world'
-        modelstate.pose = model_pose
+    # set the robot
+    model_pose = Pose()
+    model_pose.position.x = robot_x
+    model_pose.position.y = robot_y
+    model_pose.orientation.z = np.sin(robot_angle/2.0) 
+    model_pose.orientation.w = np.cos(robot_angle/2.0) 
+    modelstate = ModelState()
+    modelstate.model_name = 'mobile_base'
+    modelstate.reference_frame = 'world'
+    modelstate.pose = model_pose
+    set_model_srv = rospy.ServiceProxy('gazebo/set_model_state', SetModelState)
+    set_model_srv.call(modelstate)
 
-        set_model_srv = rospy.ServiceProxy('gazebo/set_model_state', SetModelState)
-        set_model_srv.call(modelstate)
-        rospy.loginfo("reset simulation")
-    except rospy.ServiceExceptions as e:
-         print("Service call failed %s"%e)
+
+    # set the ball
+    model_pose = Pose()
+    model_pose.position.x = ball_x
+    model_pose.position.y = ball_y
+    modelstate = ModelState()
+    modelstate.model_name = 'soccer_ball'
+    modelstate.reference_frame = 'world'
+    modelstate.pose = model_pose
+    set_model_srv = rospy.ServiceProxy('gazebo/set_model_state', SetModelState)
+    set_model_srv.call(modelstate)
+    rospy.loginfo("reset simulation")
 
 
 # '''
