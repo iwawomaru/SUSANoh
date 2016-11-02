@@ -27,7 +27,7 @@ Any location mustn't be conflict.
 ### Args:  
 robot_x(float) : the robot location x(defalut=0.0)  
 robot_y(float) : the robot location y(default=0.0)  
-robot_angle(gloat) : the robot angle. the unit is radian(defalut=0.0)  
+robot_angle(float) : the robot angle. the unit is radian(defalut=0.0)  
 ball_x(float) : the ball location x(defalut=1.0)  
 ball_y(float) : the ball location y(defalut=(0.0)  
   
