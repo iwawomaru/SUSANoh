@@ -14,7 +14,7 @@ class TestEnv(Environment):
     n_stat = 100
     n_act = 5
     episode_size = 50
-    dummy_output = np.zeros((256, 256, 3), dtype=np.float32)
+    dummy_output = np.zeros((60, 60), dtype=np.float32)
 
     def __init__(self, model):
         super(TestEnv, self).__init__(model, render=False)
@@ -59,7 +59,7 @@ class TestEnv(Environment):
 
 
 class TestAction(object):
-    dummy_output_shape = (256, 256, 3)
+    dummy_output_shape = (60, 60)
 
     def __init__(self):
         # NOP

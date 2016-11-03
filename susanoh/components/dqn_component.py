@@ -8,7 +8,7 @@ from chainer import cuda
 from chainer import serializers
 from chainer import optimizer, optimizers
 import chainer.functions as F
-from agent import Agent
+from susanoh.components.agent import Agent
 
 
 # This is Component 
@@ -45,7 +45,7 @@ class Q(Chain):
     This is DQN written in chainer
     """
 
-    SIZE = 80  # Pong is 80*80 image to use
+    SIZE = 60  # Observation SIZE
 
     def __init__(self, n_history, n_action, on_gpu=False):
         self.n_history = n_history
@@ -55,7 +55,7 @@ class Q(Chain):
             l1 = F.Convolution2D(n_history, 32, ksize=8, stride=4, nobias=False, wscale=np.sqrt(2)),
             l2 = F.Convolution2D(32, 64, ksize=3, stride=2, nobias=False, wscale=np.sqrt(2)),
             l3 = F.Convolution2D(64, 64, ksize=3, stride=1, nobias=False, wscale=np.sqrt(2)),
-            l4 = F.Linear(3136, 512, wscale=np.sqrt(2)),
+            l4 = F.Linear(None, 512, wscale=np.sqrt(2)),
             out = F.Linear(512, self.n_action, wscale=np.sqrt(2))
         )
         if on_gpu:
@@ -105,7 +105,8 @@ class DQNAgent(Agent):
 
     #stock 4 frame to send DQN
     def _update_state(self, observation):
-        formatted = observation.reshape((80,80)).astype(np.float32)
+        formatted = observation.reshape((60,60)).astype(np.float32)
+        #formatted = observation.transpose(2, 0, 1).astype(np.float32)
         state = np.maximum(formatted, self._observations[0])
         self._state.append(state)
         if len(self._state) > self.q.n_history:
@@ -148,8 +149,8 @@ class DQNAgent(Agent):
             else:
                 state.append(np.zeros((self.q.SIZE, self.q.SIZE), dtype=np.float32))
 
-        np.state = np.array(state)
-        return np.state
+        np_state = np.stack(state, axis=0)
+        return np_state
 
     def save(self, index=0):
         fname = "pong.model" if index == 0 else "pong_{0}.model".format(index)
@@ -196,10 +197,10 @@ class DQNTrainer(Agent):
         n_hist = self.agent.q.n_history
         size = self.agent.q.SIZE
         self.memory = [
-            np.zeros((memory_size, n_hist, size, size), dtype=np.float32),
+            np.zeros((memory_size, n_hist, 3, size, size), dtype=np.float32),
             np.zeros(memory_size, dtype=np.uint8),
             np.zeros((memory_size, 1),dtype=np.float32),
-            np.zeros((memory_size, n_hist, size, size), dtype=np.float32),
+            np.zeros((memory_size, n_hist, 3, size, size), dtype=np.float32),
             np.zeros((memory_size, 1), dtype=np.bool)
         ]
         self.memory_text = [
