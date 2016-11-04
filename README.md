@@ -35,3 +35,11 @@ roslaunch test.launch dir:=`pwd`
 **caution**
 ball friction is not supported in any gazebo. \<velocity_decay\> tag realize similar things.
 But this tag applicates a model in the air. 
+
+
+## Notice by Osawa
+
+emacs /home/osawa/gym-gazebo/gym_gazebo/envs/installation/catkin_ws/src/turtlebot/turtlebot_description/urdf/turtlebot_gazebo.urdf.xacro
+
+width and height 
+480 -> 60

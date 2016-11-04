@@ -16,21 +16,19 @@ import numpy as np
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 from susanoh import components, environments
 
-
 if __name__ == '__main__':
-    episodes = 1
 
     # Change to your environment
-    n_stat = environments.TestEnv.n_stat
-    n_act = environments.TestEnv.n_act
+    n_stat = environments.SoccerEnv.n_stat
+    n_act = environments.SoccerEnv.n_act
 
     # setup model
     # If you want to use L1 regularization, put the rate into 'L1_rate'.
-    model = components.DQN(n_stat, n_act, L1_rate=None, on_gpu=False)
+    model = components.DQN(n_stat, n_act, L1_rate=None, on_gpu=True)
 
     # Change to your environment
-    env = environments.TestEnv(model)
+    env = environments.SoccerEnv(model)
 
-    for i in six.moves.range(episodes):
+    while True:
         env.execute()
 
