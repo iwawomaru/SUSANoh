@@ -5,7 +5,6 @@ import numpy as np
 import rospy
 import std_srvs.srv
 from geometry_msgs.msg import Pose
-from gazebo_ros import gazebo_interface
 from gazebo_msgs.srv import SpawnModel, SetModelState, GetModelState
 from gazebo_msgs.msg import ModelState
 
