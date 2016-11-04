@@ -26,7 +26,7 @@ def get_ball_location(number=0):
     try:
         srv = rospy.ServiceProxy('/gazebo/get_model_state', GetModelState)
         get_model_state = srv(model_name="soccer_ball", relative_entity_name='world')
-        rospy.loginfo("reset world")
+        # rospy.loginfo("reset world")
     except rospy.ServiceExceptions as e:
         print("Service call failed %s"%e)
 
@@ -42,7 +42,9 @@ def reset_world(robot_x=0,robot_y=0,robot_angle=0,ball_x=1,ball_y=0):
 
     # set the robot
     model_pose = Pose()
-    model_pose.position.x = robot_x
+    #model_pose.position.x = robot_x
+    model_pose.position.x = 3.0
+    #model_pose.position.y = robot_y
     model_pose.position.y = robot_y
     model_pose.orientation.z = np.sin(robot_angle/2.0) 
     model_pose.orientation.w = np.cos(robot_angle/2.0) 
@@ -56,7 +58,9 @@ def reset_world(robot_x=0,robot_y=0,robot_angle=0,ball_x=1,ball_y=0):
 
     # set the ball
     model_pose = Pose()
-    model_pose.position.x = ball_x
+    # model_pose.position.x = ball_x
+    model_pose.position.x = 3.25
+    # model_pose.position.y = ball_y
     model_pose.position.y = ball_y
     modelstate = ModelState()
     modelstate.model_name = 'soccer_ball'
@@ -64,7 +68,7 @@ def reset_world(robot_x=0,robot_y=0,robot_angle=0,ball_x=1,ball_y=0):
     modelstate.pose = model_pose
     set_model_srv = rospy.ServiceProxy('gazebo/set_model_state', SetModelState)
     set_model_srv.call(modelstate)
-    rospy.loginfo("reset world")
+    # rospy.loginfo("reset world")
 
 
 # reset gazebo simulation(it resets models and **time**)
