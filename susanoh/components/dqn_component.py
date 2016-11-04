@@ -13,10 +13,12 @@ from susanoh.components.agent import Agent
 
 # This is Component 
 class DQN(Component):
-    def __init__(self, n_input, n_output, L1_rate=None, on_gpu=False):
+    def __init__(self, n_input, n_output, L1_rate=None, on_gpu=False, 
+                 epsilon=1, model_path=""):
         self.n_input = n_input
         self.n_output = n_output
-        self.agent = DQNAgent(n_output, epsilon=0.01, model_path="", on_gpu=on_gpu)
+        self.agent = DQNAgent(n_output, epsilon=epsilon, 
+                              model_path=model_path, on_gpu=on_gpu)
         self.trainer = DQNTrainer(self.agent, L1_rate=L1_rate)
         
     def __call__(self, data, **kwargs):
@@ -136,7 +138,7 @@ class DQNAgent(Agent):
             action  = np.random.randint(0, self.actions)
         else:
             action = np.argmax(qv.data[-1])
-
+            
         self._observations[-1] = self._observations[0].copy()
         self._observations[0] = o
         self.last_action = action

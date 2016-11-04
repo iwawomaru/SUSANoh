@@ -26,19 +26,22 @@ class GazeboEnv(Environment):
 
         self.action_getter = GazeboAction()
         self.episode_number = 0
+        self.reward_list = []
 
     def step(self, action):
         self.action_getter.control_action(action)
         obs = self.action_getter.get_image_array()
-
-        if obs is None:
-            print "obs = None"
-        else:
-            print obs.shape
         ball_loc = get_ball_location()
-        print "ball loc = ", ball_loc
-        reward = 100 if ball_loc[0] > 4.25 else 0
-        done = False
+
+        if ball_loc[0] > 4.25:
+            reward = 100
+            done = True
+            print "==============================="
+            print "======= GOOOOOOOOOOOL!! ======="
+            print "==============================="
+        else:
+            reward = 0
+            done = False
         info = None
         return obs, reward, done, info
 
@@ -61,12 +64,12 @@ class GazeboEnv(Environment):
             self.model.set_reward(reward)
             episode_reward += reward
             np.save("observation.npy", observation)
-            print self.episode_number, "-", frame, " : (action, reward) = ", \
-                action, reward
+            # print self.episode_number, "-", frame, " : (action, reward) = ", action, reward
 
             if done: break
 
         # self.model.reinforcement_train()
+        self.reward_list.append(episode_reward)
         self.episode_number += 1
         print ('ep %d: game finished, reward: %f' %
                (self.episode_number, episode_reward))
@@ -81,7 +84,12 @@ class GazeboEnv(Environment):
         return obs, reward, done, info
 
     def __del__(self):
-        # Kill gzclient, gzserver and roscore                                   
+        f = open("res.txt", "w")
+        for rew in self.reward_list:
+            f.write(str(rew)+"\n")
+        f.close()
+
+        # Kill gzclient, gzserver and roscore
         tmp = os.popen("ps -Af").read()
         gzclient_count = tmp.count('gzclient')
         gzserver_count = tmp.count('gzserver')
