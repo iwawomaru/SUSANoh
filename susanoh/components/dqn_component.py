@@ -13,7 +13,7 @@ from susanoh.components.agent import Agent
 
 # This is Component 
 class DQN(Component):
-    def __init__(self, n_input, n_output, L1_rate=None):
+    def __init__(self, n_input, n_output, L1_rate=None, on_gpu=False):
         self.n_input = n_input
         self.n_output = n_output
         self.agent = DQNAgent(n_output, epsilon=0.01, model_path="", on_gpu=False)
@@ -34,7 +34,7 @@ class DQN(Component):
 
     def reinforcement_train(self, data=None, label=None, epoch=None, **kwargs):
         #print " learning..."
-        self.trainer.act(data,self.reward)
+        self.trainer.act(data, self.reward)
     
     
 
@@ -105,7 +105,9 @@ class DQNAgent(Agent):
 
     #stock 4 frame to send DQN
     def _update_state(self, observation):
-        formatted = observation.reshape((60,60)).astype(np.float32)
+        # get only Blue channel (observation is BGR)
+        formatted = observation[:,:,0]
+        formatted = formatted.astype(np.float32)
         #formatted = observation.transpose(2, 0, 1).astype(np.float32)
         state = np.maximum(formatted, self._observations[0])
         self._state.append(state)

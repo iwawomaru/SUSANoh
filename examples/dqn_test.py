@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     # setup model
     # If you want to use L1 regularization, put the rate into 'L1_rate'.
-    model = components.DQN(n_stat, n_act, L1_rate=None)
+    model = components.DQN(n_stat, n_act, L1_rate=None, on_gpu=False)
 
     # Change to your environment
     env = environments.TestEnv(model)
