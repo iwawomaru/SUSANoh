@@ -9,6 +9,7 @@ import subprocess
 import os
 import time
 
+import numpy as np
 
 class GazeboEnv(Environment):
 
@@ -30,6 +31,10 @@ class GazeboEnv(Environment):
         self.action_getter.control_action(action)
         obs = self.action_getter.get_image_array()
 
+        if obs is None:
+            print "obs = None"
+        else:
+            print obs.shape
         ball_loc = get_ball_location()
         print "ball loc = ", ball_loc
         reward = 100 if ball_loc[0] > 4.25 else 0
@@ -48,10 +53,19 @@ class GazeboEnv(Environment):
         observation, reward, done, info = self.reset()
         for frame in xrange(self.__class__.episode_size):
             action = self.model(observation)
-            observation, reward, done, info = self.step(action)
+            # observation, reward, done, info = self.step(action)
+            if frame < 30:
+                observation, reward, done, info = self.step(1)
+            elif frame < 50:
+                observation, reward, done, info = self.step(3)
+            elif frame < 75:
+                observation, reward, done, info = self.step(1)
+            else:
+                observation, reward, done, info = self.step(0)
             self.model.set_reward(reward)
             episode_reward += reward
-
+            print observation
+            np.save("observation.npy", observation)
             print self.episode_number, "-", frame, " : (action, reward) = ", \
                 action, reward
 
@@ -92,9 +106,9 @@ class GazeboEnv(Environment):
             os.wait()
 
 class SoccerEnv(GazeboEnv):
-    n_stat = 100
+    n_stat = 60 * 60 * 3
     n_act = 5
-    episode_size = 500
+    episode_size = 2000
 
     def __init__(self, model, render=False):
         super(SoccerEnv, self).__init__(model, "test.launch", render)
