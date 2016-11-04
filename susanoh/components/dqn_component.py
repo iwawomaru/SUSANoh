@@ -16,7 +16,7 @@ class DQN(Component):
     def __init__(self, n_input, n_output, L1_rate=None, on_gpu=False):
         self.n_input = n_input
         self.n_output = n_output
-        self.agent = DQNAgent(n_output, epsilon=0.01, model_path="", on_gpu=False)
+        self.agent = DQNAgent(n_output, epsilon=0.01, model_path="", on_gpu=on_gpu)
         self.trainer = DQNTrainer(self.agent, L1_rate=L1_rate)
         
     def __call__(self, data, **kwargs):
