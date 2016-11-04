@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import os
 import numpy as np
 
 import rospy
@@ -15,15 +16,15 @@ from cv_bridge import CvBridge, CvBridgeError
 
 
 class GazeboAction:
-    def __init__(self, robot_name="mobile_base"):
-        camera_name="camera"
+    def __init__(self, target_name="player"):
+        camera_name=target_name+"camera"
         # rostopic name for turtlebot
-        topic_name_vel = robot_name+'/commands/velocity'
+        topic_name_vel = target_name+'/mobile_base/commands/velocity'
         self.topic_name_cam = camera_name+'/rgb/image_raw'
         self.cv_image = None
         try:
             # they must be called
-            rospy.init_node(robot_name+'_vel_publisher')
+            rospy.init_node(target_name+'_vel_publisher')
         except rospy.exceptions.ROSException as e:
             print(e)
         except rospy.exceptions.ROSInitException as e:
@@ -40,7 +41,7 @@ class GazeboAction:
         4:              left
         '''
     def control_action(self,action):
-    	# self.move_to_neutral()
+    	self.move_to_neutral()
         if action == 0:
             self.move_to_neutral()
         elif action == 1:
@@ -127,7 +128,7 @@ class GazeboAction:
 
 def main():
     ga = GazeboAction()
-    ga.control_action(4)
+    ga.control_action(1)
     print(ga.get_image_array())
     rospy.spin()
 
