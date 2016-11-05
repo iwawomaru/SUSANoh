@@ -31,7 +31,6 @@ class GazeboEnv(Environment):
     def step(self, action):
         self.action_getter.control_action(action)
         obs = self.action_getter.get_image_array()
-        print "---step obs", obs
         ball_loc = get_ball_location()
 
         if ball_loc[0] > 4.25:
@@ -63,7 +62,10 @@ class GazeboEnv(Environment):
                 action = 0
 
             observation, reward, done, info = self.step(action)
-            self.model.set_reward(reward)
+            if frame == self.__class__.episode_size:
+                self.model.set_reward(-100)
+            else:
+                self.model.set_reward(reward)
             episode_reward += reward
             # print self.episode_number, "-", frame, " : (action, reward) = ", action, reward
 
