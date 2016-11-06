@@ -10,6 +10,7 @@ from chainer import optimizer, optimizers
 import chainer.functions as F
 from susanoh.components.agent import Agent
 
+import time
 
 # This is Component 
 class DQN(Component):
@@ -35,7 +36,7 @@ class DQN(Component):
 
     def reinforcement_train(self, data=None, label=None, epoch=None, **kwargs):
         #print " learning..."
-        self.trainer.act(data, self.reward)
+        return self.trainer.act(data, self.reward)
     
     
 
@@ -84,7 +85,7 @@ class DQNAgent(Agent):
         self.epsilon = epsilon
         self.q = Q(n_history, actions, on_gpu)
         self._state = []
-        self._observation = [
+        self._observations = [
             np.zeros((self.q.SIZE, self.q.SIZE), np.float32),
             np.zeros((self.q.SIZE, self.q.SIZE), np.float32)
         ] # now & pre
@@ -130,7 +131,7 @@ class DQNAgent(Agent):
         
         if np.random.rand() < self.epsilon:
             action  = np.random.randint(0, self.actions)
-            print "DQN Random : ", action, "eps = ", self.epsilon
+            # print "== DQN Random : ", action, "eps = ", self.epsilon
         else:
             action = np.argmax(qv.data[-1])
             print "== DQN argmax qv : ", action
@@ -171,8 +172,8 @@ class DQNAgent(Agent):
 class DQNTrainer(Agent):
 
     def __init__(self, agent, memory_size=10**4, replay_size=32, gamma=0.99, 
-                 initial_exploration=10**1, target_update_freq=10**4,
-                 learning_rate=0.00025, epsilon_decay=1e-4, 
+                 initial_exploration=10**3, target_update_freq=500,
+                 learning_rate=0.0025, epsilon_decay=5e-4,
                  minimum_epsilon=0.1,L1_rate=None):
         self.agent = agent
         self.target = Q(self.agent.q.n_history, self.agent.q.n_action, 
@@ -239,12 +240,10 @@ class DQNTrainer(Agent):
 
     def act(self, observation, reward):
         if self.initial_exploration <= self._step:
-            print "act : agent.epsilon = ", self.agent.epsilon
+            print "act : agent.epsilon = ", self.agent.epsilon, self._step
             self.agent.epsilon -= self.epsilon_decay
             if self.agent.epsilon < self.minimum_epsilon:
                 self.agent.epsilon = self.minimum_epsilon
-        else:
-            print "act : ", self.initial_exploration, self._step
 
         return self.train(observation, reward, episode_end=False)
 
@@ -263,6 +262,7 @@ class DQNTrainer(Agent):
             self.experience_replay()
 
             if self._step % self.target_update_freq == 0:
+                print "===== copy params ", 
                 self.target.copyparams(self.agent.q)
 
         self._step += 1

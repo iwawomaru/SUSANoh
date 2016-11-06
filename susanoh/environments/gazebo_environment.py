@@ -1,5 +1,5 @@
 from susanoh.environment import Environment
-from susanoh.environments.gazebo_action import GazeboAction
+from susanoh.environments.gazebo_action2 import GazeboAction
 from susanoh.environments.gazebo_utils import get_ball_location, reset_world
 
 import rospy
@@ -29,7 +29,7 @@ class GazeboEnv(Environment):
         self.reward_list = []
         self.prev_ball_pos = 3.25
 
-    def step(self, action):
+    def step(self, action, last=False):
         self.action_getter.control_action(action)
         obs = self.action_getter.get_image_array()
         ball_loc = get_ball_location()
@@ -40,6 +40,9 @@ class GazeboEnv(Environment):
             print "==============================="
             print "======= GOOOOOOOOOOOL!! ======="
             print "==============================="
+        elif last:
+            rewrd = -1
+            done = True
         else:
             reward = max(ball_loc[0] - self.prev_ball_pos, -1)
             self.prev_ball_pos = ball_loc[0]
@@ -58,18 +61,16 @@ class GazeboEnv(Environment):
         observation, reward, done, info = self.reset()
         for frame in xrange(self.__class__.episode_size):
             if observation is not None:
-                action = self.model(observation)                
+                self.model.set_reward(reward)
+                action = self.model.reinforcement_train(data=observation)
             else:
                 print "observation was None"
                 action = 0
 
-            if observation is not None:
-                self.model.set_reward(reward)
-                self.model.reinforcement_train(data=observation)
+            is_last = (frame == self.__class__.episode_size)
+            observation, reward, done, info = self.step(action, is_last)
 
-            observation, reward, done, info = self.step(action)
             episode_reward += reward
-            # print self.episode_number, "-", frame, " : (action, reward) = ", action, reward
 
             if done: break
 
