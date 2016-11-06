@@ -54,11 +54,14 @@ class Q(Chain):
         self.n_action = n_action
         self.on_gpu = on_gpu
         super(Q, self).__init__(
-            l1 = F.Convolution2D(n_history, 32, ksize=8, stride=4, nobias=False, wscale=np.sqrt(2)),
-            l2 = F.Convolution2D(32, 64, ksize=3, stride=2, nobias=False, wscale=np.sqrt(2)),
-            l3 = F.Convolution2D(64, 64, ksize=3, stride=1, nobias=False, wscale=np.sqrt(2)),
-            l4 = F.Linear(None, 512, wscale=np.sqrt(2)),
-            out = F.Linear(512, self.n_action, wscale=np.sqrt(2))
+            l1 = F.Convolution2D(n_history, 128, ksize=5, stride=2, 
+                                 nobias=False, wscale=np.sqrt(2)),
+            l2 = F.Convolution2D(128, 128, ksize=3, stride=2, 
+                                 nobias=False, wscale=np.sqrt(2)),
+            l3 = F.Convolution2D(128, 128, ksize=3, stride=1, 
+                                 nobias=False, wscale=np.sqrt(2)),
+            #l4 = F.Linear(None, 2048, wscale=np.sqrt(2)),
+            out = F.Linear(None, self.n_action, wscale=np.sqrt(2))
         )
         if on_gpu:
             self.to_gpu()
@@ -69,8 +72,8 @@ class Q(Chain):
         h1 = F.relu(self.l1(s))
         h2 = F.relu(self.l2(h1))
         h3 = F.relu(self.l3(h2))
-        h4 = F.relu(self.l4(h3))
-        q_value = self.out(h4)
+        # h4 = F.relu(self.l4(h3))
+        q_value = self.out(h3)
         return q_value
 
     def arp_to_gpu(self, arp):
@@ -104,8 +107,10 @@ class DQNAgent(Agent):
     def _update_state(self, observation):
         # get only Blue channel (observation is BGR)
         formatted = observation[:,:,0]
+        # formatted = observation
         formatted = formatted.astype(np.float32)
         #formatted = observation.transpose(2, 0, 1).astype(np.float32)
+        # state = formatted
         state = np.maximum(formatted, self._observations[0])
         self._state.append(state)
         if len(self._state) > self.q.n_history:
@@ -172,8 +177,8 @@ class DQNAgent(Agent):
 class DQNTrainer(Agent):
 
     def __init__(self, agent, memory_size=10**4, replay_size=32, gamma=0.99, 
-                 initial_exploration=10**3, target_update_freq=500,
-                 learning_rate=0.0025, epsilon_decay=5e-4,
+                 initial_exploration=30**3, target_update_freq=500,
+                 learning_rate=0.0025, epsilon_decay=1e-4,
                  minimum_epsilon=0.1,L1_rate=None):
         self.agent = agent
         self.target = Q(self.agent.q.n_history, self.agent.q.n_action, 
@@ -240,7 +245,6 @@ class DQNTrainer(Agent):
 
     def act(self, observation, reward):
         if self.initial_exploration <= self._step:
-            print "act : agent.epsilon = ", self.agent.epsilon, self._step
             self.agent.epsilon -= self.epsilon_decay
             if self.agent.epsilon < self.minimum_epsilon:
                 self.agent.epsilon = self.minimum_epsilon
@@ -262,7 +266,7 @@ class DQNTrainer(Agent):
             self.experience_replay()
 
             if self._step % self.target_update_freq == 0:
-                print "===== copy params ", 
+                print "===== copy params "
                 self.target.copyparams(self.agent.q)
 
         self._step += 1
