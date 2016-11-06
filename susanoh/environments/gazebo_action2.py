@@ -73,6 +73,11 @@ class GazeboAction:
             print(e)
 
         ## if you need the image turtlebot sees, uncomment these
+
+        gray = cv2.cvtColor(self.cv_image, cv2.COLOR_RGB2GRAY)
+        self.cv_image[:,:,0] = gray
+        self.cv_image[:,:,1] = gray
+        self.cv_image[:,:,2] = gray
         cv2.imshow("image window", self.cv_image)
         # print "cv_image", self.cv_image
         cv2.waitKey(3)
