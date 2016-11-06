@@ -26,7 +26,6 @@ class DQN(Component):
         self.action = self.trainer.start(data)
         return self.trainer.start(data)
         
-
     def set_reward(self, reward):
         self.reward = reward
         
@@ -79,13 +78,8 @@ class Q(Chain):
 
 class DQNAgent(Agent):
 
-    def __init__(self, 
-            actions, 
-            epsilon=1, 
-            n_history=4, 
-            on_gpu=False, 
-            model_path="", 
-            load_if_exist=True):
+    def __init__(self, actions, epsilon=1., n_history=4, on_gpu=False, 
+                 model_path="", load_if_exist=True):
         self.actions = actions
         self.epsilon = epsilon
         self.q = Q(n_history, actions, on_gpu)
@@ -132,13 +126,16 @@ class DQNAgent(Agent):
         o = self._update_state(observation)
         s = self.get_state()
         qv = self.q(np.array([s]))
-        #print np.argmax(qv.data[-1])
+        # print np.argmax(qv.data[-1])
         
         if np.random.rand() < self.epsilon:
             action  = np.random.randint(0, self.actions)
+            print "DQN Random : ", action, "eps = ", self.epsilon
         else:
             action = np.argmax(qv.data[-1])
-            
+            print "== DQN argmax qv : ", action
+        # self.epsilon *= self.
+
         self._observations[-1] = self._observations[0].copy()
         self._observations[0] = o
         self.last_action = action
@@ -173,19 +170,13 @@ class DQNAgent(Agent):
 
 class DQNTrainer(Agent):
 
-    def __init__(self, 
-            agent, 
-            memory_size=10**4, 
-            replay_size=32, 
-            gamma=0.99, 
-            initial_exploration=10**4, 
-            target_update_freq=10**4,
-            learning_rate=0.00025, 
-            epsilon_decay=1e-6, 
-            minimum_epsilon=0.1,
-            L1_rate=None):
+    def __init__(self, agent, memory_size=10**4, replay_size=32, gamma=0.99, 
+                 initial_exploration=10**1, target_update_freq=10**4,
+                 learning_rate=0.00025, epsilon_decay=1e-4, 
+                 minimum_epsilon=0.1,L1_rate=None):
         self.agent = agent
-        self.target = Q(self.agent.q.n_history, self.agent.q.n_action, on_gpu=self.agent.q.on_gpu)
+        self.target = Q(self.agent.q.n_history, self.agent.q.n_action, 
+                        on_gpu=self.agent.q.on_gpu)
 
         self.memory_size = memory_size
         self.replay_size = replay_size
@@ -193,7 +184,7 @@ class DQNTrainer(Agent):
         self.initial_exploration = initial_exploration
         self.target_update_freq = target_update_freq
         self.laerning_rate = learning_rate
-        self.epslon_decay = epsilon_decay
+        self.epsilon_decay = epsilon_decay
         self.minimum_epsilon = minimum_epsilon
         self._step = 0
 
@@ -201,18 +192,16 @@ class DQNTrainer(Agent):
         n_hist = self.agent.q.n_history
         size = self.agent.q.SIZE
         self.memory = [
-            np.zeros((memory_size, n_hist, 3, size, size), dtype=np.float32),
+            np.zeros((memory_size, n_hist, size, size), dtype=np.float32),
             np.zeros(memory_size, dtype=np.uint8),
             np.zeros((memory_size, 1),dtype=np.float32),
-            np.zeros((memory_size, n_hist, 3, size, size), dtype=np.float32),
-            np.zeros((memory_size, 1), dtype=np.bool)
-        ]
-        self.memory_text = [
-            "state", "action", "reward", "next_state", "episode_end"
-        ]
+            np.zeros((memory_size, n_hist, size, size), dtype=np.float32),
+            np.zeros((memory_size, 1), dtype=np.bool)]
+        self.memory_text = ["state", "action", "reward", 
+                            "next_state", "episode_end"]
 
         #prepare optimizer
-        self.optimizer  = optimizers.RMSpropGraves(lr=learning_rate, alpha=0.95, momentum=0.95, eps=0.01)
+        self.optimizer  = optimizers.RMSpropGraves(lr=learning_rate,alpha=0.95, momentum=0.95, eps=0.01)
         self.optimizer.setup(self.agent.q)
         if L1_rate is not None:
             self.optimizer.add_hook(optimizer.Lasso(L1_rate))
@@ -222,7 +211,9 @@ class DQNTrainer(Agent):
     def calc_loss(self, states, actions, rewards, next_states, episode_ends):
         qv = self.agent.q(states)
         q_t = self.target(next_states)
-        max_q_prime = np.array(list(map(np.max, q_t.data)), dtype=np.float32) # max_a Q(s', a)
+
+        # max_a Q(s', a)
+        max_q_prime = np.array(list(map(np.max, q_t.data)), dtype=np.float32) 
 
         target = cuda.to_cpu(qv.data.copy())
         for i in range(self.replay_size):
@@ -248,9 +239,12 @@ class DQNTrainer(Agent):
 
     def act(self, observation, reward):
         if self.initial_exploration <= self._step:
-            self.agent.epsilon -= 1.0/10**6
+            print "act : agent.epsilon = ", self.agent.epsilon
+            self.agent.epsilon -= self.epsilon_decay
             if self.agent.epsilon < self.minimum_epsilon:
                 self.agent.epsilon = self.minimum_epsilon
+        else:
+            print "act : ", self.initial_exploration, self._step
 
         return self.train(observation, reward, episode_end=False)
 
@@ -261,21 +255,9 @@ class DQNTrainer(Agent):
         if not episode_end:
             action = self.agent.act(observation, reward)
             result_state = self.agent.get_state()
-            self.memorize(
-                last_state,
-                last_action,
-                reward,
-                result_state,
-                False
-            )
+            self.memorize(last_state, last_action, reward, result_state, False)
         else:
-            self.memorize(
-                last_state,
-                last_action,
-                reward,
-                last_state,
-                True
-            )
+            self.memorize(last_state, last_action, reward, last_state, True)
 
         if self.initial_exploration <= self._step:
             self.experience_replay()

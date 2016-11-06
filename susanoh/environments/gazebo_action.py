@@ -93,7 +93,6 @@ class GazeboAction:
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber(self.topic_name_cam, Image, self.image_callback)
         rospy.sleep(0.1)
-        print "SELF.CV_IMAGE", self.cv_image
         return self.cv_image
 
     # subscriber callback function(this cause a bug)

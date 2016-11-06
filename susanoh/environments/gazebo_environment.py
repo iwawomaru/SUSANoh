@@ -27,21 +27,22 @@ class GazeboEnv(Environment):
         self.action_getter = GazeboAction()
         self.episode_number = 0
         self.reward_list = []
+        self.prev_ball_pos = 3.25
 
     def step(self, action):
         self.action_getter.control_action(action)
         obs = self.action_getter.get_image_array()
-        print "---step obs", obs
         ball_loc = get_ball_location()
 
         if ball_loc[0] > 4.25:
-            reward = 100
+            reward = 1.
             done = True
             print "==============================="
             print "======= GOOOOOOOOOOOL!! ======="
             print "==============================="
         else:
-            reward = 0
+            reward = max(ball_loc[0] - self.prev_ball_pos, -1)
+            self.prev_ball_pos = ball_loc[0]
             done = False
         info = None
         return obs, reward, done, info
@@ -62,8 +63,11 @@ class GazeboEnv(Environment):
                 print "observation was None"
                 action = 0
 
+            if observation is not None:
+                self.model.set_reward(reward)
+                self.model.reinforcement_train(data=observation)
+
             observation, reward, done, info = self.step(action)
-            self.model.set_reward(reward)
             episode_reward += reward
             # print self.episode_number, "-", frame, " : (action, reward) = ", action, reward
 
