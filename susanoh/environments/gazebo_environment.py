@@ -82,7 +82,8 @@ class GazeboEnv(Environment):
         
 
     def reset(self):
-        reset_world()
+        reset_world(robot_x=3.0-np.random.rand()*0.5, 
+                    robot_y=np.random.rand()-0.5)
         obs = self.action_getter.get_image_array()
         reward = 0
         done = False

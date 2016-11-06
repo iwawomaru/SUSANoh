@@ -139,7 +139,7 @@ class DQNAgent(Agent):
             # print "== DQN Random : ", action, "eps = ", self.epsilon
         else:
             action = np.argmax(qv.data[-1])
-            print "== DQN argmax qv : ", action
+            print "== DQN argmax qv : ", qv.data[-1]
         # self.epsilon *= self.
 
         self._observations[-1] = self._observations[0].copy()
@@ -177,7 +177,7 @@ class DQNAgent(Agent):
 class DQNTrainer(Agent):
 
     def __init__(self, agent, memory_size=10**4, replay_size=32, gamma=0.99, 
-                 initial_exploration=30**3, target_update_freq=500,
+                 initial_exploration=10**3, target_update_freq=500,
                  learning_rate=0.0025, epsilon_decay=1e-4,
                  minimum_epsilon=0.1,L1_rate=None):
         self.agent = agent

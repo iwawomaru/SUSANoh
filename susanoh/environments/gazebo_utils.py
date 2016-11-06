@@ -33,7 +33,7 @@ def get_ball_location(number=0):
 
 
 # reset gazebo world(it resets models)
-def reset_world(robot_x=0,robot_y=0,robot_angle=0,ball_x=1,ball_y=0):
+def reset_world(robot_x=3.0,robot_y=0,robot_angle=0,ball_x=1,ball_y=0):
     rospy.wait_for_service('gazebo/reset_world')
     # ServiceProxy and call means `rosservice call /gazebo/reset_world`
     srv = rospy.ServiceProxy('gazebo/reset_world', std_srvs.srv.Empty)
@@ -41,9 +41,7 @@ def reset_world(robot_x=0,robot_y=0,robot_angle=0,ball_x=1,ball_y=0):
 
     # set the robot
     model_pose = Pose()
-    #model_pose.position.x = robot_x
-    model_pose.position.x = 3.0
-    #model_pose.position.y = robot_y
+    model_pose.position.x = robot_x
     model_pose.position.y = robot_y
     model_pose.orientation.z = np.sin(robot_angle/2.0) 
     model_pose.orientation.w = np.cos(robot_angle/2.0) 
