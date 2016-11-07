@@ -28,6 +28,21 @@
     </node>
   </group>
 
+  <group ns="keeper">
+    <include file="$(arg dir)/includes/$(arg base).launch.xml">
+      <arg name="base" value="$(arg base)"/>
+      <arg name="stacks" value="$(arg stacks)"/>
+      <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
+      <arg name="robot_name" value="keeper"/>
+      <arg name="number" value="1"/>
+      <arg name="init_pose" value="-x 4 -y 0 -Y 3.14159"/>
+    </include>
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="30.0" />
+    </node>
+  </group>
+
   <!-- Fake laser -->
   <node pkg="nodelet" type="nodelet" name="laserscan_nodelet_manager" args="manager"/>
   <node pkg="nodelet" type="nodelet" name="depthimage_to_laserscan"

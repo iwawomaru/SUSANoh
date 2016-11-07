@@ -7,10 +7,10 @@
     <uri>model://sun</uri>
   </include>
 
-  <include>
+  <!-- <include>
     <uri>model://soccer_ball</uri>
     <pose>3.25 0 0 0 0 0</pose>
-  </include>
+  </include> -->
 
   <include>
     <uri>model://robocup14_spl_field</uri>

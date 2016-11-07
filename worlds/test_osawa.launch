@@ -13,15 +13,20 @@
     <arg name="world_name" value="$(arg world_file)"/>
   </include>
   
-  <include file="$(find turtlebot_gazebo)/launch/includes/$(arg base).launch.xml">
-    <arg name="base" value="$(arg base)"/>
-    <arg name="stacks" value="$(arg stacks)"/>
-    <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
-  </include>
-  
-  <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
-    <param name="publish_frequency" type="double" value="30.0" />
-  </node>
+  <group ns="player">
+    <include file="$(arg dir)/includes/$(arg base).launch.xml">
+      <arg name="base" value="$(arg base)"/>
+      <arg name="stacks" value="$(arg stacks)"/>
+      <arg name="3d_sensor" value="$(arg 3d_sensor)"/>
+      <arg name="robot_name" value="player"/>
+      <arg name="number" value="1"/>
+      <arg name="init_pose" value="-x 0 -y 0"/>
+    </include>
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+      <param name="publish_frequency" type="double" value="30.0" />
+    </node>
+  </group>
 
   <!-- Fake laser -->
   <node pkg="nodelet" type="nodelet" name="laserscan_nodelet_manager" args="manager"/>
@@ -33,4 +38,7 @@
     <remap from="image" to="/camera/depth/image_raw"/>
     <remap from="scan" to="/scan"/>
   </node>
+
+  <!-- spawn a soccer ball -->
+   <node name="soccer_ball" pkg="gazebo_ros" type="spawn_model" args="-file $(arg dir)/models/soccer_ball/model.sdf -sdf -x 1 -y 0 -model soccer_ball" />
 </launch>
