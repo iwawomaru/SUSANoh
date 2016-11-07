@@ -113,9 +113,9 @@ class GazeboAction:
             print(e)
 
         ## if you need the image turtlebot sees, uncomment these
-        # cv2.imshow("image window", self.cv_image)
+        cv2.imshow("image window", self.cv_image)
         # print "cv_image", self.cv_image
-        # cv2.waitKey(3)
+        cv2.waitKey(3)
         # cv2.imwrite("pic.bmp", self.cv_image)
 
     def __del__(self):
