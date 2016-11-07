@@ -20,7 +20,7 @@ class GazeboEnv(Environment):
     def __init__(self, model, gazebo_launch_name, render=False):
         super(GazeboEnv, self).__init__(model, render)
 
-        fullpath = os.path.join(os.getcwd(), "../worlds", gazebo_launch_name)
+        fullpath = os.path.join("/home/osawa/SUSANoh/worlds", gazebo_launch_name)
         dir_path = "dir:=/home/osawa/SUSANoh/worlds"
         subprocess.Popen(["roslaunch", fullpath, dir_path])
 
@@ -58,7 +58,7 @@ class GazeboEnv(Environment):
     def execute(self, epochs=None):
         episode_reward = 0
         observation, reward, done, info = self.reset()
-        rate = rospy.Rate(5)
+        rate = rospy.Rate(1)
         self.prev_ball_pos = 3.25
         for frame in xrange(self.__class__.episode_size):
             if observation is not None:

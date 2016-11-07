@@ -10,6 +10,8 @@ import rospy.exceptions
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import Twist
 
+import time
+
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
@@ -34,7 +36,8 @@ class GazeboAction:
         self.pub = rospy.Publisher(topic_name_vel, Twist, queue_size=10)
 
         camera_name=target_name+"/camera"
-        self.topic_name_cam = camera_name+'/rgb/image_raw'
+        # self.topic_name_cam = camera_name+'/rgb/image_raw'
+        self.topic_name_cam = camera_name+'/depth/image_raw'
         self.image_sub = rospy.Subscriber(self.topic_name_cam, Image, 
                                           self.image_callback)
         '''
@@ -69,54 +72,26 @@ class GazeboAction:
         
         self.pub.publish(vel)
 
-    # def move_to_neutral(self):
-    #     vel = Twist()
-    #     vel.linear.x = 0
-    #     vel.linear.y = 0
-    #     vel.linear.z = 0
-    #     vel.angular.x = 0
-    #     vel.angular.y = 0
-    #     vel.angular.z = 0
-    #     self.pub.publish(vel)
-    #     # rospy.sleep(1.0)
-
-    # def move_forward(self):
-    #     vel = Twist()
-    #     vel.linear.x = 1.0
-    #     self.pub.publish(vel)
-    #     # rospy.sleep(7.0)
-
-    # def move_backword(self):
-    #     vel = Twist()
-    #     vel.linear.x = -1.0
-    #     self.pub.publish(vel)
-
-    # def rotate_right(self):
-    #     vel = Twist()
-    #     vel.angular.z = -2.0
-    #     self.pub.publish(vel)
-
-    # def rotate_left(self):
-    #     vel = Twist()
-    #     vel.angular.z = 2.0
-    #     self.pub.publish(vel)
-
     # return [[b, g, r],[b, g, r] ...]
     def get_image_array(self):
         return self.cv_image
 
     # subscriber callback function(this cause a bug)
     def image_callback(self, data):
+        depth_array = None
         try:
-            self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+            self.cv_image = self.bridge.imgmsg_to_cv2(data, "32FC1")
+            depth_array = np.array(self.cv_image, dtype=np.float32)
+            cv2.normalize(depth_array, depth_array, 0, 1, cv2.NORM_MINMAX)
         except CvBridgeError as e:
             print(e)
 
         ## if you need the image turtlebot sees, uncomment these
-        cv2.imshow("image window", self.cv_image)
+        # cv2.imshow("image window", self.cv_image)
         # print "cv_image", self.cv_image
         cv2.waitKey(3)
-        # cv2.imwrite("pic.bmp", self.cv_image)
+        if depth_array is not None:
+            cv2.imwrite("pic/pic"+str(time.time())+".bmp", depth_array*255)
 
     def __del__(self):
         # Kill gzclient, gzserver and roscore                                   
