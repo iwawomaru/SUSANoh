@@ -1,5 +1,5 @@
 from susanoh.environment import Environment
-from susanoh.environments.gazebo_action2 import GazeboAction
+from susanoh.environments.gazebo_action import GazeboAction
 from susanoh.environments.gazebo_utils import get_ball_location, reset_world
 
 import rospy
