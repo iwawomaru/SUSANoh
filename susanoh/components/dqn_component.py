@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from susanoh import Component
 
 import os
@@ -139,7 +141,7 @@ class DQNAgent(Agent):
             # print "== DQN Random : ", action, "eps = ", self.epsilon
         else:
             action = np.argmax(qv.data[-1])
-            print "== DQN argmax qv : ", qv.data[-1]
+            print("== DQN argmax qv : ", qv.data[-1])
         # self.epsilon *= self.
 
         self._observations[-1] = self._observations[0].copy()
@@ -266,7 +268,7 @@ class DQNTrainer(Agent):
             self.experience_replay()
 
             if self._step % self.target_update_freq == 0:
-                print "===== copy params "
+                print("===== copy params ")
                 self.target.copyparams(self.agent.q)
 
         self._step += 1
