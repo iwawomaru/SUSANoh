@@ -45,7 +45,7 @@ if __name__ == '__main__':
     n_act = environments.TestEnv.n_act
 
     # setup model
-    rules = [components.Rule(ball_rule)]
+    rules = [components.BallRule(ball_rule)]
     model = components.RuleLayer(rules)
 
     env = environments.TestEnv(model)

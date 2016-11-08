@@ -2,9 +2,9 @@
 
 import numpy
 import skimage.draw, skimage.feature, skimage.color, skimage.transform
-from susanoh import components
+from susanoh.components import Rule
 
-class BallRule(components.Rule):
+class BallRule(Rule):
     ####################################################################
     # !! Your rule_func should be able to take and process tuple (x, y)# 
     # which is center position of the ball.                            #
@@ -34,7 +34,7 @@ class BallRule(components.Rule):
         ij = numpy.unravel_index(numpy.argmax(res), res.shape)
         x, y = ij[::-1]
         # return (x, y) in resized space
-        return x, y
+        return x+self.template.shape[1]/2, y+self.template.shape[0]
 
     def supervised_train(self, data=None, label=None, epochs=None, **kwargs): pass
     def unsupervised_train(self, data=None, label=None, epochs=None, **kwargs): pass
