@@ -1,4 +1,4 @@
-# Update Nov. 3,2016
+# Update Nov. 7,2016
 
 # gazebo_utils API
 
@@ -84,56 +84,6 @@ action(int) : robot action
 
 
 ### Returns: void  
-
-
-## move_to_neutral()
-
-A turtlebot doesn't move or stops.
-It is used in `control_action` when `action=0`.  
-
-### Args: void
-
-### Returns: void
-
-
-## move_foward()
-
-A turtlebot moves forward.
-It is used in `control_action` when `action=1`.  
-
-### Args: void
-
-### Returns: void
-
-
-## move_backward()
-
-A turtlebot moves backward.
-It is used in `control_action` when `action=2`.
-
-### Args: void
-
-### Returns: void
-
-
-## rotate_right()
-
-A turtlebot roates backward.
-It is used in `control_action` when `action=3`.
-
-### Args: void
-
-### Returns: void
-
-
-## roate_left()
-
-A turtlebot rotates backward.
-It is used in `control_action` when `action=4`.
-
-### Args: void
-
-### Returns: void
 
 
 ## get_image_array()
