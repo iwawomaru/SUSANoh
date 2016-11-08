@@ -177,8 +177,8 @@ class DQNAgent(Agent):
 class DQNTrainer(Agent):
 
     def __init__(self, agent, memory_size=10**4, replay_size=32, gamma=0.99, 
-                 initial_exploration=10**3, target_update_freq=500,
-                 learning_rate=0.0025, epsilon_decay=1e-4,
+                 initial_exploration=10**4, target_update_freq=5000,
+                 learning_rate=0.00025, epsilon_decay=1e-5,
                  minimum_epsilon=0.1,L1_rate=None):
         self.agent = agent
         self.target = Q(self.agent.q.n_history, self.agent.q.n_action, 

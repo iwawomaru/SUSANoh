@@ -80,18 +80,22 @@ class GazeboAction:
     def image_callback(self, data):
         depth_array = None
         try:
-            self.cv_image = self.bridge.imgmsg_to_cv2(data, "32FC1")
+            # self.cv_image = self.bridge.imgmsg_to_cv2(data, "32FC1")
+            self.cv_image = self.bridge.imgmsg_to_cv2(data, "16UC1")
             depth_array = np.array(self.cv_image, dtype=np.float32)
             cv2.normalize(depth_array, depth_array, 0, 1, cv2.NORM_MINMAX)
         except CvBridgeError as e:
             print(e)
 
         ## if you need the image turtlebot sees, uncomment these
-        # cv2.imshow("image window", self.cv_image)
+
         # print "cv_image", self.cv_image
+        """ 
         cv2.waitKey(3)
         if depth_array is not None:
             cv2.imwrite("pic/pic"+str(time.time())+".bmp", depth_array*255)
+            cv2.imshow("image window", depth_array)
+        """
 
     def __del__(self):
         # Kill gzclient, gzserver and roscore                                   

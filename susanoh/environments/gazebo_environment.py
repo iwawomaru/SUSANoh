@@ -29,7 +29,7 @@ class GazeboEnv(Environment):
         self.reward_list = []
         self.prev_ball_pos = 3.25
 
-    def step(self, action):
+    def step(self, action, is_end=False):
         self.action_getter.control_action(action)
         obs = self.action_getter.get_image_array()
         ball_loc = get_ball_location()
@@ -41,6 +41,10 @@ class GazeboEnv(Environment):
             print "==============================="
             print "======= GOOOOOOOOOOOL!! ======="
             print "==============================="
+        elif is_end:
+            reward = -1.
+            done = True
+            print "******* fail *******"
         else:
             reward = max(ball_loc[0] - self.prev_ball_pos, 0)
             # reward = 0
@@ -58,7 +62,7 @@ class GazeboEnv(Environment):
     def execute(self, epochs=None):
         episode_reward = 0
         observation, reward, done, info = self.reset()
-        rate = rospy.Rate(1)
+        rate = rospy.Rate(5)
         self.prev_ball_pos = 3.25
         for frame in xrange(self.__class__.episode_size):
             if observation is not None:
@@ -68,7 +72,8 @@ class GazeboEnv(Environment):
                 print "observation was None"
                 action = 0
 
-            observation, reward, done, info = self.step(action)
+            is_end = (frame == self.__class__.episode_size-1)
+            observation, reward, done, info = self.step(action, is_end)
             episode_reward += reward
 
             if done: break
