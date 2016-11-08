@@ -10,36 +10,33 @@ import rospy.exceptions
 from sensor_msgs.msg import Image
 from geometry_msgs.msg import Twist
 
-import time
-
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
 
 
 class GazeboAction:
-    def __init__(self, target_name="player"):
-        
+    def __init__(self, target_name=""):
+
         self.cv_image = None
         self.bridge = CvBridge()
 
         try:
-            # they must be called
-            rospy.init_node('vel_publisher_'+target_name)
+            rospy.init_node(target_name+'vel_publisher')
         except rospy.exceptions.ROSException as e:
             print(e)
         except rospy.exceptions.ROSInitException as e:
             print(e)
 
-        # rostopic name for turtlebot
         topic_name_vel = target_name+'/mobile_base/commands/velocity'
         self.pub = rospy.Publisher(topic_name_vel, Twist, queue_size=10)
 
-        camera_name=target_name+"/camera"
-        # self.topic_name_cam = camera_name+'/rgb/image_raw'
-        self.topic_name_cam = camera_name+'/depth/image_raw'
+        camera_name=target_name+"camera"
+        self.topic_name_cam = camera_name+'/rgb/image_raw'
         self.image_sub = rospy.Subscriber(self.topic_name_cam, Image, 
                                           self.image_callback)
+
+    def control_action(self,action):
         '''
         action(Int) define robot action
         0: robot don't move.
@@ -48,28 +45,20 @@ class GazeboAction:
         3: robot rotate right
         4:              left
         '''
-    def control_action(self,action):
+
         vel = Twist()
-    	# self.move_to_neutral()
         if action == 0:
-            # self.move_to_neutral()
             pass
         elif action == 1:
-            # self.move_forward()
             vel.linear.x = 1.0
         elif action == 2:
-            # self.move_backword()
             vel.linear.x = -1.0
         elif action == 3:
-            # self.rotate_right()
             vel.angular.z = -2.0
         elif action == 4:
-            # self.rotate_left()
             vel.angular.z = 2.0
         else:
-            print("unexpected action=%d.",action)
             rospy.loginfo("unexpected action=%d.",action)
-        
         self.pub.publish(vel)
 
     # return [[b, g, r],[b, g, r] ...]
@@ -78,24 +67,21 @@ class GazeboAction:
 
     # subscriber callback function(this cause a bug)
     def image_callback(self, data):
-        depth_array = None
         try:
-            # self.cv_image = self.bridge.imgmsg_to_cv2(data, "32FC1")
-            self.cv_image = self.bridge.imgmsg_to_cv2(data, "16UC1")
-            depth_array = np.array(self.cv_image, dtype=np.float32)
-            cv2.normalize(depth_array, depth_array, 0, 1, cv2.NORM_MINMAX)
+            self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
         except CvBridgeError as e:
             print(e)
 
         ## if you need the image turtlebot sees, uncomment these
 
+        gray = cv2.cvtColor(self.cv_image, cv2.COLOR_RGB2GRAY)
+        self.cv_image[:,:,0] = gray
+        self.cv_image[:,:,1] = gray
+        self.cv_image[:,:,2] = gray
+        cv2.imshow("image window", self.cv_image)
         # print "cv_image", self.cv_image
-        """ 
         cv2.waitKey(3)
-        if depth_array is not None:
-            cv2.imwrite("pic/pic"+str(time.time())+".bmp", depth_array*255)
-            cv2.imshow("image window", depth_array)
-        """
+        # cv2.imwrite("pic.bmp", self.cv_image)
 
     def __del__(self):
         # Kill gzclient, gzserver and roscore                                   
@@ -117,15 +103,12 @@ class GazeboAction:
             roscore_count or rosmaster_count >0):
             os.wait()
 
-def test():
+def main():
     ga = GazeboAction()
-    ga2 = GazeboAction(target_name="keeper")
-    for i in range(1000000):
-        ga.control_action(4)
-        ga2.control_action(3)
-    # print(ga.get_image_array())
+    ga.control_action(1)
+    print(ga.get_image_array())
     rospy.spin()
 
 
 if __name__ == "__main__":
-    sys.exit(test())
+    sys.exit(main())
