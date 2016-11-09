@@ -15,3 +15,12 @@ class RuleLayer(Component):
             if action is not None:
                 return action
         return self.default_action
+
+    def accum_reinforcement_train(self, data, action):
+        for r in self.rules:
+            r.accum_reinforcement_train(data, action)
+
+    def set_reward(self, reward):
+        for r in self.rules:
+            r.set_reward(reward)
+        
