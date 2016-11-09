@@ -23,12 +23,13 @@ class DQN(Component):
         self.agent = DQNAgent(n_output, epsilon=epsilon, 
                               model_path=model_path, on_gpu=on_gpu)
         self.trainer = DQNTrainer(self.agent, L1_rate=L1_rate)
-        
+         
     def __call__(self, data, **kwargs):
         #self.rng = np.random.RandomState(123)
         self.action = self.trainer.start(data)
-        return self.trainer.start(data)
-        
+       
+        return self.action
+    
     def set_reward(self, reward):
         self.reward = reward
         
@@ -300,7 +301,7 @@ class DQNTrainer(Agent):
 
             if self._step % self.target_update_freq == 0:
                 print("===== copy params ")
-                self.target.copyprams(self.agent.q)
+                self.target.copyparams(self.agent.q)
         self._step += 1
         return action
 
