@@ -29,15 +29,14 @@ class DQN(Component):
     def __call__(self, data, **kwargs):
         #self.rng = np.random.RandomState(123)
         action = int(self.trainer.start(data))
-        self.accum[action] += 0.2
+        self.accum[action] += 0.3
         if self.accum[action] >= 1.0:
             #self.accums = [0, 0, 0, 0, 0]
-            for i in xrange(len(self.accum)):
-                self.accum[i] *= 0.9
-            self.action = action                   
+            self.action = action
         else:
-            return None
-        
+            self.action = None
+        for i in xrange(len(self.accum)):
+            self.accum[i] *= 0.9
         return self.action
     
     def set_reward(self, reward):
