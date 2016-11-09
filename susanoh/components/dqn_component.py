@@ -207,6 +207,7 @@ class DQNTrainer(Agent):
         self.epsilon_decay = epsilon_decay
         self.minimum_epsilon = minimum_epsilon
         self._step = 0
+        model_path = ""
         self.model_path = model_path if model_path else os.path.join(os.path.dirname(__file__), "./store")
 
         # prepare for replay
