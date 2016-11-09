@@ -22,6 +22,8 @@ from susanoh import components, environments
 parser = argparse.ArgumentParser(description='SUSANoh:')
 parser.add_argument('--initmodel', '-m', default='',
                    help='Initialize the model from given file')
+parser.add_argment('--resume', '-r', default='',
+                   help='Initialize the optimization from snapshot')
 args = parser.parse_args()
 
 action_table = {
@@ -63,7 +65,9 @@ if __name__ == '__main__':
     if args.initmodel:
         print('Load model from', args.initmodel)
         serializers.load_npz(args.initmodel, dqn_rule.agent.q)
-
+    if args.resume:
+        print('Load optimizer state from', args.resume)
+        serializers.load_npz(args.resume, dqn_rule.trainer.optimizer)
     # Change to your environment
     env = environments.SoccerEnv(model)
     i = 0
@@ -74,4 +78,6 @@ if __name__ == '__main__':
         if i % 10 == 0:
            print 'save the model'
            dqn_rule.agent.save(index=i)
+           print 'save the state'
+           dqn_rule.trainer.save(index=i)
 

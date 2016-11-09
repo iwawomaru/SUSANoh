@@ -174,7 +174,7 @@ class DQNAgent(Agent):
         return np_state
 
     def save(self, index=0):
-        fname = "pong.model" if index == 0 else "pong_{0}.model".format(index)
+        fname = "dqn.model" if index == 0 else "dqn_{0}.model".format(index)
         path = os.path.join(self.model_path, fname)
         serializers.save_npz(path, self.q)
 
@@ -227,6 +227,11 @@ class DQNTrainer(Agent):
             self.optimizer.add_hook(optimizer.Lasso(L1_rate))
         self._loss = 9
         self._qv = 0
+            
+    def save(self, index=0):
+        fname = "dqn.state" if index == 0 else "dqn_{0}.state".format(index)
+        path = os.path.join(self.model_path, fname)
+        serializers.save_npz(path, self.optimizer)
 
     def calc_loss(self, states, actions, rewards, next_states, episode_ends):
         qv = self.agent.q(states)
