@@ -67,7 +67,7 @@ class GazeboAction:
             # self.rotate_left()
             vel.angular.z = 2.0
         else:
-            print("unexpected action=%d.",action)
+            print "unexpected action=", action
             rospy.loginfo("unexpected action=%d.",action)
         
         self.pub.publish(vel)
