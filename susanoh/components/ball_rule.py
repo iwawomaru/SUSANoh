@@ -38,6 +38,7 @@ class BallRule(Rule):
         # return (x, y) in resized space
         return x+self.template.shape[1]/2, y+self.template.shape[0]
 
+    def set_reward(self, reward): pass
     def supervised_train(self, data=None, label=None, epochs=None, **kwargs): pass
     def unsupervised_train(self, data=None, label=None, epochs=None, **kwargs): pass
     def reinforcement_train(self, data=None, label=None, epochs=None, **kwargs):  pass
