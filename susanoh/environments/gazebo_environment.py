@@ -24,13 +24,19 @@ class GazeboEnv(Environment):
         dir_path = "dir:=/home/osawa/SUSANoh/worlds"
         subprocess.Popen(["roslaunch", fullpath, dir_path])
 
+        self.action = 0
         self.action_getter = GazeboAction()
         self.episode_number = 0
         self.reward_list = []
         self.prev_ball_pos = 3.25
+        self.accums = [0, 0, 0, 0, 0]
 
     def step(self, action, is_end=False):
-        self.action_getter.control_action(action)
+        self.accums[action] += 0.2
+        if self.accums[action] >= 1.0:
+            self.action = action
+            self.accums = [0, 0, 0, 0, 0]
+        self.action_getter.control_action(self.action)
         obs = self.action_getter.get_image_array()
         ball_loc = get_ball_location()
 
@@ -63,11 +69,14 @@ class GazeboEnv(Environment):
         episode_reward = 0
         observation, reward, done, info = self.reset()
         rate = rospy.Rate(5)
+        self.accums = [0, 0, 0, 0, 0]
+        self.action = 0
         self.prev_ball_pos = 3.25
         for frame in xrange(self.__class__.episode_size):
             if observation is not None:
                 self.model.set_reward(reward)
                 action = self.model.reinforcement_train(data=observation)
+                action = int(action)
             else:
                 print "observation was None"
                 action = 0

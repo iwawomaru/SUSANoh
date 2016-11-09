@@ -29,6 +29,12 @@ if __name__ == '__main__':
     # Change to your environment
     env = environments.SoccerEnv(model)
 
+    i = 0
     while True:
+
         env.execute()
+        i = i + 1
+        if i % 10 == 0:
+            print "*********************** save ***********************"
+            model.agent.save(index=i)
 
