@@ -78,7 +78,7 @@ class GazeboEnv(Environment):
             observation, reward, done, info = self.step(action, is_end)
             episode_reward += reward
 
-            self.model.reinforcement_train(action)
+            self.model.accum_reinforcement_train(data=observation, action)
 
             if done: break
             rate.sleep()

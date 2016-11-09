@@ -41,7 +41,7 @@ class DQN(Component):
         return self.trainer.act(data, self.reward)
 
     # for accumrater
-    def accum_reinforcement_train(self, data, action):
+    def accum_reinforcement_train(self, data=None, action):
         return self.trainer.accum_act(data, action, self.reward)
 
     
