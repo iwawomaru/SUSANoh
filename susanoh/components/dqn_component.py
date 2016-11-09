@@ -39,10 +39,12 @@ class DQN(Component):
     def reinforcement_train(self, data=None, label=None, epoch=None, **kwargs):
         #print " learning..."
         return self.trainer.act(data, self.reward)
-    
-    
 
+    # for accumrater
+    def accum_reinforcement_train(self, data, action):
+        return self.trainer.accum_act(data, action, self.reward)
 
+    
 # These class is for making DQN Component
 class Q(Chain):
     """
@@ -253,6 +255,15 @@ class DQNTrainer(Agent):
 
         return self.train(observation, reward, episode_end=False)
 
+    def accum_act(self, observation, action, reward):
+        
+        if self.initial_exploration <= self._step:
+            self.agent.epsilon -= self.epsilon_decay
+            if self.agent.epsilon < self.minimum_epsilon:
+                self.agent.epsilon = self.minimum_epsilon
+
+        return self.accum_train(observatoin, action, reward, episode_end=False)
+
     def train(self, observation, reward, episode_end):
         action = 0
         last_state = self.agent.get_state()
@@ -271,6 +282,25 @@ class DQNTrainer(Agent):
                 print("===== copy params ")
                 self.target.copyparams(self.agent.q)
 
+        self._step += 1
+        return action
+    
+    def accum_train(self, observation, action, reward,  episode_end):
+        last_state = self.agent.get_state()
+        last_action = self.agent.last_action
+        if not episode_end:
+            dummy_action = self.agent.act(observation, reward)
+            result_state = self.agent.get_state()
+            self.memorize(last_state, action, reward, result_state, False)
+        else:
+            self.memorize(last_state, last_action, reward, last_state, True)
+
+        if self.initial_exploration <= self._step:
+            self.experience_replay()
+
+            if self._step % self.target_update_freq == 0:
+                print("===== copy params ")
+                self.target.copyprams(self.agent.q)
         self._step += 1
         return action
 
