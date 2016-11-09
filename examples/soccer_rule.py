@@ -22,7 +22,7 @@ from susanoh import components, environments
 parser = argparse.ArgumentParser(description='SUSANoh:')
 parser.add_argument('--initmodel', '-m', default='',
                    help='Initialize the model from given file')
-parser.add_argment('--resume', '-r', default='',
+parser.add_argument('--resume', '-r', default='',
                    help='Initialize the optimization from snapshot')
 args = parser.parse_args()
 
