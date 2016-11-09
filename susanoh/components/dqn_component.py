@@ -23,11 +23,21 @@ class DQN(Component):
         self.agent = DQNAgent(n_output, epsilon=epsilon, 
                               model_path=model_path, on_gpu=on_gpu)
         self.trainer = DQNTrainer(self.agent, L1_rate=L1_rate)
-         
+        self.accum = [0, 0, 0, 0, 0]
+        self.action = None
+        
     def __call__(self, data, **kwargs):
         #self.rng = np.random.RandomState(123)
-        self.action = self.trainer.start(data)
-       
+        action = int(self.trainer.start(data))
+        self.accum[action] += 0.2
+        if self.accum[action] >= 1.0:
+            #self.accums = [0, 0, 0, 0, 0]
+            for i in xrange(len(self.accum)):
+                self.accum[i] *= 0.9
+            self.action = action                   
+        else:
+            return None
+        
         return self.action
     
     def set_reward(self, reward):
@@ -182,7 +192,7 @@ class DQNAgent(Agent):
 class DQNTrainer(Agent):
 
     def __init__(self, agent, memory_size=10**4, replay_size=32, gamma=0.99, 
-                 initial_exploration=10**2, target_update_freq=5000,
+                 initial_exploration=10**2, target_update_freq=500,
                  learning_rate=0.00025, epsilon_decay=1e-2,
                  minimum_epsilon=0.1,L1_rate=None):
         self.agent = agent

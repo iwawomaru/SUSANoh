@@ -57,7 +57,8 @@ if __name__ == '__main__':
     # If you want to use L1 regularization, put the rate into 'L1_rate'.
     ball_rule = components.BallRule(ball_rule)
     dqn_rule = components.DQN(n_stat, n_act, L1_rate=None, on_gpu=True)
-    model = components.RuleLayer([ball_rule, dqn_rule])
+    random_rule = components.Random(n_stat, n_act)
+    model = components.RuleLayer([dqn_rule, ball_rule,random_rule])
                                   
     if args.initmodel:
         print('Load model from', args.initmodel)

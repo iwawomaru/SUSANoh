@@ -25,7 +25,9 @@ class Random(Component):
             return res
 
         return None
-
+    
+    def set_reward(self, reward): pass
     def supervised_train(self, data=None, label=None, epochs=None, **kwargs): pass
     def unsupervised_train(self, data=None, label=None, epochs=None, **kwargs): pass
     def reinforcement_train(self, data=None, label=None, epochs=None, **kwargs):  pass
+    def accum_reinforcement_train(self, data=None, action=None): pass
