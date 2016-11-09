@@ -67,7 +67,7 @@ class GazeboEnv(Environment):
         for frame in xrange(self.__class__.episode_size):
             if observation is not None:
                 self.model.set_reward(reward)
-                action = self.model.reinforcement_train(data=observation)
+                action = self.model(observation)
             else:
                 print "observation was None"
                 action = 0

@@ -26,6 +26,8 @@ class BallRule(Rule):
         # chack input channels
         if data.ndim==3 and data.shape[-1] != 1:
             data = skimage.color.rgb2gray(data)
+        elif data.ndim==3:
+            data = data[:,:,0]
         elif data.ndim != 2:
             raise ValueError('Invalid array format')
         # resize image for detection
