@@ -63,8 +63,10 @@ class GazeboEnv(Environment):
         episode_reward = 0
         observation, reward, done, info = self.reset()
         rate = rospy.Rate(5)
+        action = None
         self.prev_ball_pos = 3.25
         for frame in xrange(self.__class__.episode_size):
+
             if observation is not None:
                 self.model.set_reward(reward)
                 action = self.model(observation)
@@ -76,10 +78,11 @@ class GazeboEnv(Environment):
             observation, reward, done, info = self.step(action, is_end)
             episode_reward += reward
 
+            self.model.reinforcement_train(action)
+
             if done: break
             rate.sleep()
 
-        # self.model.reinforcement_train()
         self.reward_list.append(episode_reward)
         self.episode_number += 1
         print ('ep %d: game finished, reward: %f' %
