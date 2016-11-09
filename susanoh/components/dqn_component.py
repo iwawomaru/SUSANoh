@@ -41,7 +41,7 @@ class DQN(Component):
         return self.trainer.act(data, self.reward)
 
     # for accumrater
-    def accum_reinforcement_train(self, data=None, action):
+    def accum_reinforcement_train(self, data, action):
         return self.trainer.accum_act(data, action, self.reward)
 
     
@@ -262,7 +262,7 @@ class DQNTrainer(Agent):
             if self.agent.epsilon < self.minimum_epsilon:
                 self.agent.epsilon = self.minimum_epsilon
 
-        return self.accum_train(observatoin, action, reward, episode_end=False)
+        return self.accum_train(observation, action, reward, episode_end=False)
 
     def train(self, observation, reward, episode_end):
         action = 0

@@ -68,7 +68,6 @@ class GazeboEnv(Environment):
         for frame in xrange(self.__class__.episode_size):
 
             if observation is not None:
-                self.model.set_reward(reward)
                 action = self.model(observation)
             else:
                 print "observation was None"
@@ -78,7 +77,9 @@ class GazeboEnv(Environment):
             observation, reward, done, info = self.step(action, is_end)
             episode_reward += reward
 
-            self.model.accum_reinforcement_train(data=observation, action)
+            if observation is not None:
+                self.model.set_reward(reward)
+                self.model.accum_reinforcement_train(observation, action)
 
             if done: break
             rate.sleep()
