@@ -25,8 +25,9 @@ class DQN(Component, Visualizer):
         self.n_input = n_input
         self.n_output = n_output
         self.agent = DQNAgent(n_output, epsilon=epsilon, 
-                              model_path=model_path, on_gpu=on_gpu)
-        self.trainer = DQNTrainer(self.agent, L1_rate=L1_rate)
+                              model_path=model_path, on_gpu=on_gpu,
+                              bicamon_server=bicamon_server)
+        self.trainer = DQNTrainer(self.agent, L1_rate=L1_rate, bicamon_server=bicamon_server)
         self.accum = [0, 0, 0, 0, 0]
         self.action = None
         
