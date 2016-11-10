@@ -4,10 +4,12 @@ import numpy as np
 
 class Random(Component):
     def __init__(self, n_input, n_output, output_type="id", bicamon_server=None):
-        super(Random, self).__init__(server=bicamon_server)
+        super(Random, self).__init__()
         self.n_input = n_input
         self.n_output = n_output
         self.output_type = output_type
+        # for BiCAmon
+        self.server = bicamon_server
 
     def __call__(self, data, **kwargs):
 
