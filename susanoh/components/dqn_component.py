@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 from susanoh import Component
+from susanoh import Visualizer
 
 import os
 import numpy as np
@@ -15,9 +16,11 @@ from susanoh.components.agent import Agent
 import time
 
 # This is Component 
-class DQN(Component):
+class DQN(Component, Visualizer):
     def __init__(self, n_input, n_output, L1_rate=None, on_gpu=False, 
-                 epsilon=1, model_path=""):
+                 epsilon=1, model_path="",
+                 bicamon_server=None):
+        super(Rule, self).__init__(server=bicamon_server)
         self.n_input = n_input
         self.n_output = n_output
         self.agent = DQNAgent(n_output, epsilon=epsilon, 

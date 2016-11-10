@@ -9,8 +9,10 @@ class BallRule(Rule):
     # !! Your rule_func should be able to take and process tuple (x, y)# 
     # which is center position of the ball.                            #
     ####################################################################
-    def __init__(self, rule_func, t_size=32, t_r=12, t_top=0.75, proc_size=(256,256)):
-        super(BallRule, self).__init__(rule_func)
+    def __init__(self, 
+            rule_func, t_size=32, t_r=12, t_top=0.75, proc_size=(256,256),
+            bicamon_server=None):
+        super(BallRule, self).__init__(rule_func, bicamon_server=bicamon_server)
         self.proc_size = proc_size
         # create template
         ones = numpy.ones((t_size, t_size), dtype=numpy.float32)

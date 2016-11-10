@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from susanoh import Component
+from susanoh import Visualizer
 
-class RuleLayer(Component):
-    def __init__(self, rules, default_action=0, bicamon=False):
-        super(RuleLayer, self).__init__(bicamon=bicamon)
+class RuleLayer(Component, Visualizer):
+    def __init__(self, rules, default_action=0, bicamon_server=None):
+        super(RuleLayer, self).__init__(server=bicamon_server)
         self.rules = rules
         self.default_action = default_action
 

@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from susanoh import Component
+from susanoh import Visualizer
 
-class Rule(Component):
-    def __init__(self, rule_func, bicamon=False):
-        super(Rule, self).__init__(bicamon=bicamon)
+class Rule(Component, Visualizer):
+    def __init__(self, rule_func, bicamon_server=None):
+        super(Rule, self).__init__(server=bicamon_server)
         self.rule_func = rule_func
     
     def __call__(self, data, **kwargs):
