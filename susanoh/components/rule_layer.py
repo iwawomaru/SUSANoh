@@ -8,8 +8,8 @@ class RuleLayer(Component, Visualizer):
         super(RuleLayer, self).__init__()
         self.rules = rules
         self.default_action = default_action
+        # for BiCAmon
         self.server = bicamon_server
-
 
     def __call__(self, data, **kwargs):
         for r in self.rules:

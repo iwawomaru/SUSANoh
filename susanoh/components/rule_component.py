@@ -7,6 +7,7 @@ class Rule(Component, Visualizer):
     def __init__(self, rule_func, bicamon_server=None):
         super(Rule, self).__init__()
         self.rule_func = rule_func
+        # for BiCAmon
         self.server = bicamon_server
     
     def __call__(self, data, **kwargs):
