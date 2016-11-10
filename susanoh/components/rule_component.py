@@ -11,10 +11,13 @@ class Rule(Component, Visualizer):
         self.server = bicamon_server
     
     def __call__(self, data, **kwargs):
-        # send to BiCAmon
-        self.send_to_viewer('SCm')
-        self.send_to_viewer('SCs')
-        return self.rule_func(data, **kwargs)
+        action = self.rule_func(data, **kwargs)
+        
+        if action is not None:
+            # send to BiCAmon
+            self.send_to_viewer('SCm')
+            self.send_to_viewer('SCs')
+        return action
 
     def supervised_train(self, data=None, label=None, epochs=None, **kwargs): pass
     def unsupervised_train(self, data=None, label=None, epochs=None, **kwargs): pass

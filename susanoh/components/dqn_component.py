@@ -36,12 +36,11 @@ class DQN(Component, Visualizer):
         #self.rng = np.random.RandomState(123)
         action = int(self.trainer.start(data))
 
-        # send to BiCAmon
-        self.send_to_viewer('ACAd')
-        self.send_to_viewer('ACAv')
-
         self.accum[action] += 0.3
         if self.accum[action] >= 1.0:
+            # send to BiCAmon
+            self.send_to_viewer('ACAd')
+            self.send_to_viewer('ACAv')
             #self.accums = [0, 0, 0, 0, 0]
             self.action = action
         else:
