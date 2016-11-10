@@ -231,7 +231,8 @@ class DQNTrainer(Agent, Visualizer):
     def __init__(self, agent, memory_size=10**4, replay_size=32, gamma=0.99, 
                  initial_exploration=2500, target_update_freq=2500,
                  learning_rate=0.00025, epsilon_decay=25000,
-                 minimum_epsilon=0.1,L1_rate=None):
+                 minimum_epsilon=0.1,L1_rate=None,
+                 bicamon_server=None):
         self.agent = agent
         self.target = Q(self.agent.q.n_history, self.agent.q.n_action, 
                         on_gpu=self.agent.q.on_gpu)
