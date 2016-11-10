@@ -5,6 +5,7 @@ from susanoh import Visualizer
 
 import os
 import numpy as np
+from chainer import initializers
 from chainer import Chain
 from chainer import Variable
 from chainer import cuda
@@ -44,7 +45,7 @@ class DQN(Component, Visualizer):
         else:
             self.action = None
         for i in xrange(len(self.accum)):
-            self.accum[i] *= 0.9
+            self.accum[i] *= 0.8
         return self.action
     
     def set_reward(self, reward):
@@ -87,12 +88,13 @@ class Q(Chain):
         self.n_history = n_history
         self.n_action = n_action
         self.on_gpu = on_gpu
+        # initializer = initializers.HeNormal()
         super(Q, self).__init__(
-            l1 = F.Convolution2D(n_history, 128, ksize=5, stride=2, 
+            l1 = F.Convolution2D(n_history, 64, ksize=5, stride=2, 
                                  nobias=False, wscale=np.sqrt(2)),
-            l2 = F.Convolution2D(128, 128, ksize=3, stride=2, 
+            l2 = F.Convolution2D(64, 64, ksize=3, stride=1, 
                                  nobias=False, wscale=np.sqrt(2)),
-            l3 = F.Convolution2D(128, 128, ksize=3, stride=1, 
+            l3 = F.Convolution2D(64, 64, ksize=3, stride=1, 
                                  nobias=False, wscale=np.sqrt(2)),
             #l4 = F.Linear(None, 2048, wscale=np.sqrt(2)),
             out = F.Linear(None, self.n_action, wscale=np.sqrt(2))
@@ -134,9 +136,13 @@ class DQNAgent(Agent, Visualizer):
             os.mkdir(self.model_path)
         else:
             models = self.get_model_files()
+            """
             if load_if_exist and len(models) > 0:
                 print("load model file {0}.".format(models[-1]))
                 serializers.load_npz(os.path.join(self.model_path, models[-1]), self.q)
+                serializers.load_npz(os.path.join(self.model_path, 
+            models[-1]), self.q)
+            """
         # for BiCAmon
         self.server = bicamon_server
 
@@ -221,10 +227,9 @@ class DQNAgent(Agent, Visualizer):
 class DQNTrainer(Agent, Visualizer):
 
     def __init__(self, agent, memory_size=10**4, replay_size=32, gamma=0.99, 
-                 initial_exploration=10**2, target_update_freq=500,
-                 learning_rate=0.00025, epsilon_decay=1e-2,
-                 minimum_epsilon=0.1,L1_rate=None,
-                 bicamon_server=None):
+                 initial_exploration=2500, target_update_freq=2500,
+                 learning_rate=0.00025, epsilon_decay=25000,
+                 minimum_epsilon=0.1,L1_rate=None):
         self.agent = agent
         self.target = Q(self.agent.q.n_history, self.agent.q.n_action, 
                         on_gpu=self.agent.q.on_gpu)
