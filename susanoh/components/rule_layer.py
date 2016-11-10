@@ -14,7 +14,11 @@ class RuleLayer(Component, Visualizer):
         for r in self.rules:
             action = r(data, **kwargs)
             if action is not None:
+                self.send_to_viewer('MOp')
+                self.send_to_viewer('MOs')
                 return action
+        self.send_to_viewer('MOp')
+        self.send_to_viewer('MOs')
         return self.default_action
 
     def accum_reinforcement_train(self, data, action):

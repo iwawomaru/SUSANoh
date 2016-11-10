@@ -9,6 +9,9 @@ class Rule(Component, Visualizer):
         self.rule_func = rule_func
     
     def __call__(self, data, **kwargs):
+        # send to BiCAmon
+        self.send_to_viewer('SCm')
+        self.send_to_viewer('SCs')
         return self.rule_func(data, **kwargs)
 
     def supervised_train(self, data=None, label=None, epochs=None, **kwargs): pass

@@ -32,6 +32,11 @@ class DQN(Component, Visualizer):
     def __call__(self, data, **kwargs):
         #self.rng = np.random.RandomState(123)
         action = int(self.trainer.start(data))
+
+        # send to BiCAmon
+        self.send_to_viewer('ACAd')
+        self.send_to_viewer('ACAv')
+
         self.accum[action] += 0.3
         if self.accum[action] >= 1.0:
             #self.accums = [0, 0, 0, 0, 0]
@@ -43,6 +48,18 @@ class DQN(Component, Visualizer):
         return self.action
     
     def set_reward(self, reward):
+        if reward > 0:
+            # send to BiCAmon
+            self.send_to_viewer('ACB')
+        elif reward < 0:
+            # send to BiCAmon
+            self.send_to_viewer('COAp')
+            self.send_to_viewer('MEA')
+            self.send_to_viewer('BLA')
+            self.send_to_viewer('CEA')
+            self.send_to_viewer('BMA')
+            self.send_to_viewer('AAA')
+
         self.reward = reward
         
     def supervised_train(self, data=None, label=None, epoch=None, **kwargs): pass
@@ -97,10 +114,11 @@ class Q(Chain):
         return arp if not self.on_gpu else cuda.to_gpu(arp)
 
 
-class DQNAgent(Agent):
+class DQNAgent(Agent, Visualizer):
 
     def __init__(self, actions, epsilon=1., n_history=4, on_gpu=False, 
-                 model_path="", load_if_exist=True):
+                 model_path="", load_if_exist=True,
+                 bicamon_server=None):
         self.actions = actions
         self.epsilon = epsilon
         self.q = Q(n_history, actions, on_gpu)
@@ -119,6 +137,8 @@ class DQNAgent(Agent):
             if load_if_exist and len(models) > 0:
                 print("load model file {0}.".format(models[-1]))
                 serializers.load_npz(os.path.join(self.model_path, models[-1]), self.q)
+        # for BiCAmon
+        self.server = bicamon_server
 
     #stock 4 frame to send DQN
     def _update_state(self, observation):
@@ -146,6 +166,13 @@ class DQNAgent(Agent):
         return action
 
     def act(self, observation, reward):
+        # send to BiCAmon
+        self.send_to_viewer('VISp')
+        self.send_to_viewer('VISam')
+        self.send_to_viewer('VISpm')
+        self.send_to_viewer('VISI')
+        self.send_to_viewer('VISpl')
+
         o = self._update_state(observation)
         s = self.get_state()
         qv = self.q(np.array([s]))
@@ -191,12 +218,13 @@ class DQNAgent(Agent):
         return model_files
 
 
-class DQNTrainer(Agent):
+class DQNTrainer(Agent, Visualizer):
 
     def __init__(self, agent, memory_size=10**4, replay_size=32, gamma=0.99, 
                  initial_exploration=10**2, target_update_freq=500,
                  learning_rate=0.00025, epsilon_decay=1e-2,
-                 minimum_epsilon=0.1,L1_rate=None):
+                 minimum_epsilon=0.1,L1_rate=None,
+                 bicamon_server=None):
         self.agent = agent
         self.target = Q(self.agent.q.n_history, self.agent.q.n_action, 
                         on_gpu=self.agent.q.on_gpu)
@@ -232,6 +260,9 @@ class DQNTrainer(Agent):
             self.optimizer.add_hook(optimizer.Lasso(L1_rate))
         self._loss = 9
         self._qv = 0
+
+        # for BiCAmon
+        self.server = bicamon_server
             
     def save(self, index=0):
         fname = "dqn.state" if index == 0 else "dqn_{0}.state".format(index)
@@ -239,6 +270,10 @@ class DQNTrainer(Agent):
         serializers.save_npz(path, self.optimizer)
 
     def calc_loss(self, states, actions, rewards, next_states, episode_ends):
+        # send to BiCAmon
+        self.send_to_viewer('CP')
+        self.send_to_viewer('LSc')
+
         qv = self.agent.q(states)
         q_t = self.target(next_states)
 
@@ -334,6 +369,15 @@ class DQNTrainer(Agent):
         self.memory[4][_index] = episode_end
 
     def experience_replay(self):
+        # send to BiCAmon
+        self.send_to_viewer('ENTI')
+        self.send_to_viewer('DG')
+        self.send_to_viewer('CA3')
+        self.send_to_viewer('CA1')
+        self.send_to_viewer('ENTm')
+        self.send_to_viewer('PAR')
+        self.send_to_viewer('POST')
+
         indices = []
         if self._step < self.memory_size:
             indices = np.random.randint(0, self._step, (self.replay_size))

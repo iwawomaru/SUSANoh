@@ -22,9 +22,19 @@ class BallRule(Rule):
 
     def __call__(self, data, **kwargs):
         c = self.ball_detecotion(data)
+        # send to BiCAmon
+        self.send_to_viewer('SCm')
+        self.send_to_viewer('SCs')
         return self.rule_func(c, **kwargs)
 
     def ball_detecotion(self, data):
+        # send to BiCAmon
+        self.send_to_viewer('VISp')
+        self.send_to_viewer('VISam')
+        self.send_to_viewer('VISpm')
+        self.send_to_viewer('VISI')
+        self.send_to_viewer('VISpl')
+        
         # chack input channels
         if data.ndim==3 and data.shape[-1] != 1:
             data = skimage.color.rgb2gray(data)
