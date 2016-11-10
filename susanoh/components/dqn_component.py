@@ -21,7 +21,6 @@ class DQN(Component, Visualizer):
     def __init__(self, n_input, n_output, L1_rate=None, on_gpu=False, 
                  epsilon=1, model_path="",
                  bicamon_server=None):
-        super(Rule, self).__init__(server=bicamon_server)
         self.n_input = n_input
         self.n_output = n_output
         self.agent = DQNAgent(n_output, epsilon=epsilon, 
@@ -30,6 +29,7 @@ class DQN(Component, Visualizer):
         self.trainer = DQNTrainer(self.agent, L1_rate=L1_rate, bicamon_server=bicamon_server)
         self.accum = [0, 0, 0, 0, 0]
         self.action = None
+        self.server = bicamon_server
         
     def __call__(self, data, **kwargs):
         #self.rng = np.random.RandomState(123)

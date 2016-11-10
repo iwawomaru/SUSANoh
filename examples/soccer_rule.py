@@ -4,13 +4,13 @@
 ## DQN Component Tester
 ## Author: Daiki SHIMADA
 
+# for Python3 style
+from __future__ import print_function
+import six
 
 import sys,os
 from chainer import serializers
 import argparse
-
-# for Python3 style
-import six
 
 import numpy as np
 
@@ -55,8 +55,8 @@ if __name__ == '__main__':
     bicamon_server = 'http://localhost:5000/api'
 
     # Change to your environment
-    n_stat = environments.SoccerEnv.n_stat
-    n_act = environments.SoccerEnv.n_act
+    n_stat = environments.TestEnv.n_stat
+    n_act = environments.TestEnv.n_act
 
     # setup model
     # If you want to use L1 regularization, put the rate into 'L1_rate'.
@@ -72,15 +72,7 @@ if __name__ == '__main__':
         print('Load optimizer state from', args.resume)
         serializers.load_npz(args.resume, dqn_rule.trainer.optimizer)
     # Change to your environment
-    env = environments.SoccerEnv(model)
+    env = environments.TestEnv(model)
     i = 0
     while True:
         env.execute()
-
-        i = i + 1
-        if i % 10 == 0:
-           print 'save the model'
-           dqn_rule.agent.save(index=i)
-           print 'save the state'
-           dqn_rule.trainer.save(index=i)
-

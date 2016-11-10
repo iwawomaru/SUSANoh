@@ -5,9 +5,10 @@ from susanoh import Visualizer
 
 class RuleLayer(Component, Visualizer):
     def __init__(self, rules, default_action=0, bicamon_server=None):
-        super(RuleLayer, self).__init__(server=bicamon_server)
+        super(RuleLayer, self).__init__()
         self.rules = rules
         self.default_action = default_action
+        self.server = bicamon_server
 
 
     def __call__(self, data, **kwargs):
