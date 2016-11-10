@@ -61,7 +61,7 @@ if __name__ == '__main__':
     # setup model
     # If you want to use L1 regularization, put the rate into 'L1_rate'.
     ball_rule = components.BallRule(ball_rule, bicamon_server=bicamon_server)
-    dqn_rule = components.DQN(n_stat, n_act, L1_rate=None, on_gpu=True, bicamon_server=bicamon_server)
+    dqn_rule = components.DQN(n_stat, n_act, L1_rate=None, on_gpu=False, bicamon_server=bicamon_server)
     random_rule = components.Random(n_stat, n_act)
     model = components.RuleLayer([dqn_rule, ball_rule,random_rule], bicamon_server=bicamon_server)
                                   
