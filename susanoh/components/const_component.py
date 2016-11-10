@@ -1,3 +1,4 @@
+
 from susanoh import Component
 
 class Const(Component):
@@ -13,3 +14,5 @@ class Const(Component):
     def supervised_train(self, data=None, label=None, epochs=None, **kwargs): pass
     def unsupervised_train(self, data=None, label=None, epochs=None, **kwargs): pass
     def reinforcement_train(self, data=None, label=None, epochs=None, **kwargs):  pass
+    def set_reward(self, reward): pass
+    def accum_reinforcement_train(self, data=None, action=None): pass
