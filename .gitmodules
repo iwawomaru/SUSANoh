@@ -1,0 +1,3 @@
+[submodule "bicamon"]
+	path = bicamon
+	url = https://github.com/kiyomaro927/bicamon

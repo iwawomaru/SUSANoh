@@ -51,16 +51,19 @@ def ball_rule(data, max_position=255):
 
 if __name__ == '__main__':
 
+    # BiCAmon server URL
+    bicamon_server = 'http://localhost:5000/api'
+
     # Change to your environment
     n_stat = environments.SoccerEnv.n_stat
     n_act = environments.SoccerEnv.n_act
 
     # setup model
     # If you want to use L1 regularization, put the rate into 'L1_rate'.
-    ball_rule = components.BallRule(ball_rule)
-    dqn_rule = components.DQN(n_stat, n_act, L1_rate=None, on_gpu=True)
+    ball_rule = components.BallRule(ball_rule, bicamon_server=bicamon_server)
+    dqn_rule = components.DQN(n_stat, n_act, L1_rate=None, on_gpu=True, bicamon_server=bicamon_server)
     random_rule = components.Random(n_stat, n_act)
-    model = components.RuleLayer([dqn_rule, ball_rule,random_rule])
+    model = components.RuleLayer([dqn_rule, ball_rule,random_rule], bicamon_server=bicamon_server)
                                   
     if args.initmodel:
         print('Load model from', args.initmodel)
