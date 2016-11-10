@@ -4,6 +4,7 @@ from susanoh import Component
 
 import os
 import numpy as np
+from chainer import initializers
 from chainer import Chain
 from chainer import Variable
 from chainer import cuda
@@ -67,12 +68,13 @@ class Q(Chain):
         self.n_history = n_history
         self.n_action = n_action
         self.on_gpu = on_gpu
+        # initializer = initializers.HeNormal()
         super(Q, self).__init__(
-            l1 = F.Convolution2D(n_history, 128, ksize=5, stride=2, 
+            l1 = F.Convolution2D(n_history, 64, ksize=5, stride=2, 
                                  nobias=False, wscale=np.sqrt(2)),
-            l2 = F.Convolution2D(128, 128, ksize=3, stride=2, 
+            l2 = F.Convolution2D(64, 64, ksize=3, stride=1, 
                                  nobias=False, wscale=np.sqrt(2)),
-            l3 = F.Convolution2D(128, 128, ksize=3, stride=1, 
+            l3 = F.Convolution2D(64, 64, ksize=3, stride=1, 
                                  nobias=False, wscale=np.sqrt(2)),
             #l4 = F.Linear(None, 2048, wscale=np.sqrt(2)),
             out = F.Linear(None, self.n_action, wscale=np.sqrt(2))
@@ -113,9 +115,12 @@ class DQNAgent(Agent):
             os.mkdir(self.model_path)
         else:
             models = self.get_model_files()
+            """
             if load_if_exist and len(models) > 0:
                 print("load model file {0}.".format(models[-1]))
-                serializers.load_npz(os.path.join(self.model_path, models[-1]), self.q)
+                serializers.load_npz(os.path.join(self.model_path, 
+            models[-1]), self.q)
+            """
 
     #stock 4 frame to send DQN
     def _update_state(self, observation):
