@@ -3,8 +3,8 @@
 from susanoh import Component
 
 class RuleLayer(Component):
-    def __init__(self, rules, default_action=0):
-        super(RuleLayer, self).__init__()
+    def __init__(self, rules, default_action=0, bicamon=False):
+        super(RuleLayer, self).__init__(bicamon=bicamon)
         self.rules = rules
         self.default_action = default_action
 

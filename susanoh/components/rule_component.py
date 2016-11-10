@@ -3,8 +3,8 @@
 from susanoh import Component
 
 class Rule(Component):
-    def __init__(self, rule_func):
-        super(Rule, self).__init__()
+    def __init__(self, rule_func, bicamon=False):
+        super(Rule, self).__init__(bicamon=bicamon)
         self.rule_func = rule_func
     
     def __call__(self, data, **kwargs):
