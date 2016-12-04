@@ -4,7 +4,7 @@
 import argparse
 import numpy as np
 import chainer
-from chainer import cuda, optimizers
+from chainer import cuda, optimizers, serializers
 
 # import dataset script
 import cifar10
