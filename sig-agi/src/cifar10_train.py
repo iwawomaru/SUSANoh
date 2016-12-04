@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import sys
 import numpy as np
 import chainer
 from chainer import cuda, optimizers, serializers
 
 # import dataset script
+sys.path.append('../data/')
 import cifar10
 
 # import from Masalachai

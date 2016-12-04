@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-import os
+import sys
 import six
 import numpy as np
 import chainer
@@ -12,6 +12,7 @@ from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
 
 # import dataset script
+sys.path.append('../data/')
 import cifar10
 
 # import from Masalachai
