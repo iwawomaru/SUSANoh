@@ -29,7 +29,7 @@ class ShallowConvNet(chainer.Chain):
 class ThinConvNet(chainer.Chain):
 
     def __init__(self):
-        super(ShallowConvNet, self).__init__(
+        super(ThinConvNet, self).__init__(
                 conv1 = L.Convolution2D(3, 32, 3, pad=1),
                 conv2 = L.Convolution2D(32, 32, 3, pad=1),
                 conv3 = L.Convolution2D(32, 32, 3, pad=1),

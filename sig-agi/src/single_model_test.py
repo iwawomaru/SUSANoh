@@ -52,8 +52,11 @@ test_data = DataFeeder(test_data_dict, batchsize=args.batch)
 test_data.hook_preprocess(cifar_preprocess)
 
 # Model Setup
-model_file = 'shallow_a.h5'
-model_name = 'shallow'
+#model_file = 'shallow_a.h5'
+#model_file = 'shallow_b.h5'
+model_file = 'thin.h5'
+#model_name = 'shallow'
+model_name = 'thin'
 print('TEST Name: Single Model Test')
 print('Model Name: ', model_file)
 model = models.ClassifierModel(convnet.models[model_name]())
