@@ -9,7 +9,7 @@ from chainer import cuda, optimizers, serializers
 
 # import dataset script
 sys.path.append('../data/')
-import cifar10
+import cifar10loader
 
 # import from Masalachai
 from masalachai import DataFeeder
@@ -44,7 +44,7 @@ if args.gpu >= 0:
 xp = cuda.cupy if args.gpu >= 0 else np
 
 # loading dataset
-dataset = cifar10.load()
+dataset = cifar10loader.load('../data/cifar10.pkl')
 
 dim = dataset['train']['data'][0].size
 N_train = len(dataset['train']['target'])
@@ -61,7 +61,7 @@ test_data.hook_preprocess(cifar_preprocess)
 
 
 # Model Setup
-model = models.ClassifierModel(AllConvNet())
+model = models.ClassifierModel(convnet.models[args.model]())
 if args.gpu >= 0:
     cuda.get_device(args.gpu).use()
     model.to_gpu()
