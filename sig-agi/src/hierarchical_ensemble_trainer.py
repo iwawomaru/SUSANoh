@@ -7,10 +7,11 @@ import six
 import numpy as np
 import chainer
 from chainer import cuda, optimizers, serializers
+import chainer.functions as F
 
 # import dataset script
 sys.path.append('../data/')
-import cifar10
+import cifar10loader
 
 # import from Masalachai
 from masalachai import DataFeeder
@@ -39,7 +40,7 @@ if args.gpu >= 0:
 xp = cuda.cupy if args.gpu >= 0 else np
 
 # loading dataset
-dataset = cifar10.load()
+dataset = cifar10loader.load('../data/cifar10.pkl')
 
 dim = dataset['train']['data'][0].size
 N_test = len(dataset['test']['target'])
@@ -51,15 +52,15 @@ test_data = DataFeeder(test_data_dict, batchsize=args.valbatch)
 test_data.hook_preprocess(cifar_preprocess)
 
 # -----------parameter setting-------------- #
-alpha = 0.9 # threshold to return
+alpha = 0.9999 # threshold to return
 # ------------------------------------------ #
 
 # Model Setup
-model_files = ['shallow_a.h5', 'shallow_b.h5', 'thin.h5']
+model_files = ['shallow_b.h5', 'shallow_a.h5', 'thin.h5']
 model_names = ['shallow', 'shallow', 'thin']
 model_list = [models.ClassifierModel(convnet.models[m]()) for m in model_names]
 for model, f in zip(model_list, model_files):
-    serializers.load_hd5(f, model)
+    serializers.load_hdf5(f, model)
     if args.gpu >= 0:
         cuda.get_device(args.gpu).use()
         model.to_gpu()
@@ -84,10 +85,10 @@ for i, model in enumerate(model_list):
         train_data = DataFeeder(t_data_dict, batchsize=batchsize)
         train_data.hook_preprocess(cifar_preprocess)
         trainer = trainers.SupervisedTrainer(optimizer, logger, train_data, test_data, args.gpu)
-        trainer.train(int(training_epoch*N_train/batchsize), 
-                      log_interval=int(N_train/batchsize), 
-                      test_interval=int(N_train/batchsize),
-                      test_nitr=int(N_test/args.valbatch))
+        trainer.train(int(training_epoch*(N_train/batchsize+1)), 
+                      log_interval=int(N_train/batchsize+1), 
+                      test_interval=int(N_train/batchsize+1),
+                      test_nitr=int(N_test/args.valbatch+1))
         serializers.save_hdf5('ensemble_'+model_names[i], model)
 
     # Pick Up Under Alpha Value Data for Next Classifier
@@ -101,7 +102,7 @@ for i, model in enumerate(model_list):
             for k,v in data_dict.items()} for i in six.moves.range(len(data_dict['data']))]
         dict_list = [cifar_preprocess(d) for d in data_list]
         vx = tuple( [chainer.Variable( xp.asarray([d['data'] for d in dict_list]) ) ] )
-        outputs = xp.asnumpy(model.predict(vx).data.max(axis=-1))
+        outputs = xp.asnumpy(F.softmax(model.predict(vx)).data.max(axis=-1))
         under_alpha_data.extend(list(np.arange(len(outputs))[outputs<=alpha]))
 
 
