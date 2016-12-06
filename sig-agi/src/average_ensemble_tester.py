@@ -7,6 +7,7 @@ import six
 import numpy as np
 import chainer
 from chainer import cuda, optimizers, serializers
+import chainer.functions as F
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import precision_score
 from sklearn.metrics import recall_score
@@ -52,7 +53,9 @@ test_data = DataFeeder(test_data_dict, batchsize=args.batch)
 test_data.hook_preprocess(cifar_preprocess)
 
 # Model Setup
-model_files = ['shallow_a.h5', 'shallow_b.h5', 'thin.h5']
+#beta = [1, 0.99, 0.98]
+beta = [1, 1, 1]
+model_files = ['shallow_b.h5', 'shallow_a.h5', 'thin.h5']
 model_names = ['shallow', 'shallow', 'thin']
 model_list = [models.ClassifierModel(convnet.models[m]()) for m in model_names]
 for model, f in zip(model_list, model_files):
@@ -74,8 +77,9 @@ for idx in six.moves.range(0, len(test_data_dict['data']), args.batch):
     vx = tuple( [chainer.Variable( xp.asarray([d['data'] for d in dict_list]) ) ] )
 
     outputs = np.zeros((args.batch, 10), dtype=np.float32)
-    for model in model_list:
-        outputs = outputs + xp.asnumpy(model.predict(vx).data)
+    for model,b in zip(model_list, beta):
+        #outputs = outputs + xp.asnumpy(model.predict(vx).data)
+        outputs = outputs + b * xp.asnumpy(F.softmax(model.predict(vx)).data)
     res.extend(list(outputs.argmax(-1)))
 
 print('Accuracy: ', accuracy_score(test_data_dict['target'], res))

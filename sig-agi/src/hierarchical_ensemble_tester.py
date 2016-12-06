@@ -53,12 +53,19 @@ test_data_dict = {'data':dataset['test']['data'].astype(np.float32),
                   'target':dataset['test']['target'].astype(np.int32)}
 
 # -----------parameter setting-------------- #
-alpha = 0.9999 # threshold to return
+alpha = 1.6 # threshold to return
+
+#beta = [1, 1, 1]
+beta = [1, 0.99, 0.98]
+#beta = [0.99, 0.995, 1.]
 # ------------------------------------------ #
 
 # Model Setup
-model_files = ['./shallow_b.h5', './ensemble_shallow.h5', './ensemble_thin.h5']
+#model_files = ['./shallow_b.h5', './ensemble_shallow.h5', './ensemble_thin.h5']
+model_files = ['./shallow_b.h5', './shallow_a.h5', './thin.h5']
+#model_files = ['./thin.h5', './shallow_a.h5', './shallow_b.h5']
 model_names = ['shallow', 'shallow', 'thin']
+#model_names = ['thin', 'shallow', 'shallow']
 model_list = [models.ClassifierModel(convnet.models[m]()) for m in model_names]
 for model, f in zip(model_list, model_files):
     serializers.load_hdf5(f, model)
@@ -79,8 +86,9 @@ for idx in six.moves.range(0, len(test_data_dict['data']), args.batch):
     vx = tuple( [chainer.Variable( xp.asarray([d['data'] for d in dict_list]) ) ] )
 
     outputs = np.zeros((args.batch, 10), dtype=np.float32)
-    for model in model_list:
-        outputs = outputs + xp.asnumpy(model.predict(vx).data) * (outputs.max(axis=-1, keepdims=True) <= alpha)
+    for model,b in zip(model_list, beta):
+        outputs = outputs + b * xp.asnumpy(F.softmax(model.predict(vx)).data) * (outputs.max(axis=-1, keepdims=True) <= alpha)
+        #outputs = outputs + xp.asnumpy(F.softmax(model.predict(vx)).data)
     res.extend(list(outputs.argmax(axis=1)))
 
 print('Accuracy: ', accuracy_score(test_data_dict['target'], res))

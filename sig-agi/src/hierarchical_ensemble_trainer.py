@@ -52,7 +52,7 @@ test_data = DataFeeder(test_data_dict, batchsize=args.valbatch)
 test_data.hook_preprocess(cifar_preprocess)
 
 # -----------parameter setting-------------- #
-alpha = 0.9999 # threshold to return
+alpha = 1.8 # threshold to return
 # ------------------------------------------ #
 
 # Model Setup
@@ -66,7 +66,7 @@ for model, f in zip(model_list, model_files):
         model.to_gpu()
 
 batchsize = 60
-training_epoch = 100
+training_epoch = 5
 under_alpha_data = []
 
 for i, model in enumerate(model_list):
@@ -89,7 +89,7 @@ for i, model in enumerate(model_list):
                       log_interval=int(N_train/batchsize+1), 
                       test_interval=int(N_train/batchsize+1),
                       test_nitr=int(N_test/args.valbatch+1))
-        serializers.save_hdf5('ensemble_'+model_names[i], model)
+        serializers.save_hdf5('ensemble_'+model_files[i], model)
 
     # Pick Up Under Alpha Value Data for Next Classifier
     under_alpha_data = []
