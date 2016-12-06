@@ -1,3 +1,6 @@
 [submodule "bicamon"]
 	path = bicamon
 	url = https://github.com/kiyomaro927/bicamon
+[submodule "sig-agi/dqn"]
+	path = sig-agi/dqn
+	url = https://github.com/icoxfog417/chainer_pong.git
