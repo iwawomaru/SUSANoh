@@ -36,11 +36,11 @@ if __name__ == '__main__':
 
     # setup model
     ball_rule = components.PongRule(ball_rule)
-    dqn_rule = components.DQN(n_stat, n_act, L1_rate=None, on_gpu=False)
+    dqn_rule = components.DQN(n_stat, n_act, L1_rate=None, on_gpu=True)
     model = components.RuleLayer([dqn_rule, ball_rule])
 
     # Change to your environment
-    env = environments.Pong(model, render=True)
+    env = environments.Pong(model, render=False)
 
     while True:
         env.execute()
