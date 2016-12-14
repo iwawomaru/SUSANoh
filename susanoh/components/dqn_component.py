@@ -27,7 +27,7 @@ class DQN(Component, Visualizer):
                               model_path=model_path, on_gpu=on_gpu,
                               bicamon_server=bicamon_server)
         self.trainer = DQNTrainer(self.agent, L1_rate=L1_rate, bicamon_server=bicamon_server)
-        self.accum = [0, 0, 0, 0, 0]
+        self.accum = [0, 0, 0, 0, 0, 0]
         self.action = None
         # for BiCAmon
         self.server = bicamon_server
@@ -84,7 +84,7 @@ class Q(Chain):
     This is DQN written in chainer
     """
 
-    SIZE = 60  # Observation SIZE
+    SIZE = 80  # Observation SIZE
 
     def __init__(self, n_history, n_action, on_gpu=False):
         self.n_history = n_history
@@ -92,14 +92,11 @@ class Q(Chain):
         self.on_gpu = on_gpu
         # initializer = initializers.HeNormal()
         super(Q, self).__init__(
-            l1 = F.Convolution2D(n_history, 64, ksize=5, stride=2, 
-                                 nobias=False, wscale=np.sqrt(2)),
-            l2 = F.Convolution2D(64, 64, ksize=3, stride=1, 
-                                 nobias=False, wscale=np.sqrt(2)),
-            l3 = F.Convolution2D(64, 64, ksize=3, stride=1, 
-                                 nobias=False, wscale=np.sqrt(2)),
-            #l4 = F.Linear(None, 2048, wscale=np.sqrt(2)),
-            out = F.Linear(None, self.n_action, wscale=np.sqrt(2))
+            l1=F.Convolution2D(n_history, 32, ksize=8, stride=4, nobias=False, wscale=np.sqrt(2)),
+            l2=F.Convolution2D(32, 64, ksize=3, stride=2, nobias=False, wscale=np.sqrt(2)),
+            l3=F.Convolution2D(64, 64, ksize=3, stride=1, nobias=False, wscale=np.sqrt(2)),
+            l4=F.Linear(3136, 512, wscale=np.sqrt(2)),
+            out=F.Linear(512, self.n_action, initialW=np.zeros((n_action, 512), dtype=np.float32))
         )
         if on_gpu:
             self.to_gpu()
@@ -110,8 +107,8 @@ class Q(Chain):
         h1 = F.relu(self.l1(s))
         h2 = F.relu(self.l2(h1))
         h3 = F.relu(self.l3(h2))
-        # h4 = F.relu(self.l4(h3))
-        q_value = self.out(h3)
+        h4 = F.relu(self.l4(h3))
+        q_value = self.out(h4)
         return q_value
 
     def arp_to_gpu(self, arp):
@@ -150,13 +147,11 @@ class DQNAgent(Agent, Visualizer):
 
     #stock 4 frame to send DQN
     def _update_state(self, observation):
-        # get only Blue channel (observation is BGR)
-        formatted = observation[:,:,0]
-        # formatted = observation
+        formatted = observation
         formatted = formatted.astype(np.float32)
         #formatted = observation.transpose(2, 0, 1).astype(np.float32)
-        # state = formatted
-        state = np.maximum(formatted, self._observations[0])
+        state = formatted
+        #state = np.maximum(formatted, self._observations[0])
         self._state.append(state)
         if len(self._state) > self.q.n_history:
             self._state.pop(0)
@@ -204,7 +199,8 @@ class DQNAgent(Agent, Visualizer):
         state = []
         for i in range(self.q.n_history):
             if i < len(self._state):
-                state.append(self._state[i])
+                #state.append(self._state[i])
+                state.append(np.reshape(self._state[i], (self.q.SIZE, self.q.SIZE)))
             else:
                 state.append(np.zeros((self.q.SIZE, self.q.SIZE), dtype=np.float32))
 
@@ -228,11 +224,18 @@ class DQNAgent(Agent, Visualizer):
 
 class DQNTrainer(Agent, Visualizer):
 
-    def __init__(self, agent, memory_size=10**4, replay_size=32, gamma=0.99, 
-                 initial_exploration=2500, target_update_freq=2500,
-                 learning_rate=0.00025, epsilon_decay=25000,
-                 minimum_epsilon=0.1,L1_rate=None,
-                 bicamon_server=None):
+    def __init__(self, 
+            agent, 
+            memory_size=10**4, 
+            replay_size=32, 
+            gamma=0.99, 
+            initial_exploration=10**4, 
+            target_update_freq=10**4,
+            learning_rate=0.00025, 
+            epsilon_decay=1e-6,
+            minimum_epsilon=0.1,
+            L1_rate=None,
+            bicamon_server=None):
         self.agent = agent
         self.target = Q(self.agent.q.n_history, self.agent.q.n_action, 
                         on_gpu=self.agent.q.on_gpu)

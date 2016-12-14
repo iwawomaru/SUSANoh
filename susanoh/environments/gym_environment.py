@@ -82,14 +82,43 @@ class Pong(GymEnv):
         I[I == 144] = 0  # erase background (background type 1)
         I[I == 109] = 0  # erase background (background type 2)
         I[I != 0] = 1  # everything else (paddles, ball) just set to 1
-        return I.astype(np.float).ravel()
+        return I.astype(np.float)
+
 
     def step(self, action):
         observation, reward, done, info = self.env.step(action)
         return self.prepro(observation), reward, done, info
 
+
     def reset(self):
         return self.prepro(self.env.reset())
+
+
+    def execute(self, epochs=None):
+        episode_reward = 0
+
+        observation = self.prepro(self.env.reset())
+        done = False
+        reward = 0
+
+        for frame in xrange(self.__class__.episode_size):
+            if self.render: self.print_stat()
+            action = self.model(observation)
+            observation, reward, done, info = self.step(action)
+            self.model.set_reward(reward) # does model should have history of reward? environment is better?
+            episode_reward += reward
+            if done: break
+
+        if not done:
+            self.model.set_reward(self.default_negative_reward)
+            episode_reward += (-reward + self.default_negative_reward)
+
+        #self.model.reinforcement_train()
+        self.model.accum_reinforcement_train(observation, action)
+
+        self.episode_number += 1
+        print ('ep %d: game finished, reward: %f' %
+               (self.episode_number, episode_reward))
 
 
 class LunarLander(GymEnv):
