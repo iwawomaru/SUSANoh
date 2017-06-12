@@ -29,6 +29,8 @@ import convnet
 # argparse
 parser = argparse.ArgumentParser(description='Convolutional Network Tester on CIFAR-10')
 parser.add_argument('--batch', '-b', type=int, default=1000, help='test batchsize (default: 1000)')
+parser.add_argument('--alpha', '-a', type=float, default=1.6, help='alpha parameter (default: 1.6)')
+parser.add_argument('--beta', '-e', type=float, nargs='+', default=[1., 0.99, 0.98], help='beta parameter (default: 1., 0.99, 0.98)')
 parser.add_argument('--gpu', '-g', type=int, default=-1, help='GPU device #, if you want to use cpu, use -1 (default: -1)')
 args = parser.parse_args()
 
@@ -53,11 +55,9 @@ test_data_dict = {'data':dataset['test']['data'].astype(np.float32),
                   'target':dataset['test']['target'].astype(np.int32)}
 
 # -----------parameter setting-------------- #
-alpha = 1.6 # threshold to return
+alpha = args.alpha # threshold to return
 
-#beta = [1, 1, 1]
-beta = [1, 0.99, 0.98]
-#beta = [0.99, 0.995, 1.]
+beta = args.beta
 # ------------------------------------------ #
 
 # Model Setup
@@ -86,9 +86,9 @@ for idx in six.moves.range(0, len(test_data_dict['data']), args.batch):
     vx = tuple( [chainer.Variable( xp.asarray([d['data'] for d in dict_list]) ) ] )
 
     outputs = np.zeros((args.batch, 10), dtype=np.float32)
-    for model,b in zip(model_list, beta):
-        outputs = outputs + b * xp.asnumpy(F.softmax(model.predict(vx)).data) * (outputs.max(axis=-1, keepdims=True) <= alpha)
-        #outputs = outputs + xp.asnumpy(F.softmax(model.predict(vx)).data)
+    while outputs.max(axis=-1, keepdims=True) <= alpha:
+        for model,b in zip(model_list, beta):
+            outputs = outputs + b * xp.asnumpy(F.softmax(model.predict(vx)).data)
     res.extend(list(outputs.argmax(axis=1)))
 
 print('Accuracy: ', accuracy_score(test_data_dict['target'], res))
