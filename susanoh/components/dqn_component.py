@@ -42,7 +42,7 @@ class DQN(Component, Visualizer):
 
         self.accum[action] += 0.3
         if self.accum[action] >= 1.0:
-            #self.accums = [0, 0, 0, 0, 0]
+            #self.accum = [0, 0, 0, 0, 0, 0]
             self.action = action
         else:
             self.action = None
@@ -186,7 +186,7 @@ class DQNAgent(Agent, Visualizer):
             # print "== DQN Random : ", action, "eps = ", self.epsilon
         else:
             action = np.argmax(qv.data[-1])
-            print("== DQN argmax qv : ", qv.data[-1])
+            #print("== DQN argmax qv : ", qv.data[-1])
         # self.epsilon *= self.
 
         self._observations[-1] = self._observations[0].copy()
@@ -232,7 +232,8 @@ class DQNTrainer(Agent, Visualizer):
             initial_exploration=10**4, 
             target_update_freq=10**4,
             learning_rate=0.00025, 
-            epsilon_decay=1e-6,
+            #epsilon_decay=1e-6,
+            epsilon_decay=0.1,
             minimum_epsilon=0.1,
             L1_rate=None,
             bicamon_server=None):
@@ -345,7 +346,7 @@ class DQNTrainer(Agent, Visualizer):
             self.experience_replay()
 
             if self._step % self.target_update_freq == 0:
-                print("===== copy params ")
+                #print("===== copy params ")
                 self.target.copyparams(self.agent.q)
 
         self._step += 1
@@ -365,7 +366,7 @@ class DQNTrainer(Agent, Visualizer):
             self.experience_replay()
 
             if self._step % self.target_update_freq == 0:
-                print("===== copy params ")
+                #print("===== copy params ")
                 self.target.copyparams(self.agent.q)
         self._step += 1
         return action

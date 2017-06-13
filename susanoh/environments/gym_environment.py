@@ -52,8 +52,7 @@ class GymEnv(Environment):
 
         self.model.reinforcement_train()
         self.episode_number += 1
-        print ('ep %d: game finished, reward: %f' %
-               (self.episode_number, episode_reward))
+        print ('ep %d: game finished, reward: %f' % (self.episode_number, episode_reward))
 
     def print_stat(self):
         self.env.render()
@@ -117,8 +116,10 @@ class Pong(GymEnv):
         self.model.accum_reinforcement_train(observation, action)
 
         self.episode_number += 1
-        print ('ep %d: game finished, reward: %f' %
-               (self.episode_number, episode_reward))
+        print ('%f' % (episode_reward))
+        print(self.model.call_counter)
+        self.model.reset_counter()
+        #print ('ep %d: game finished, reward: %f' % (self.episode_number, episode_reward))
 
 
 class LunarLander(GymEnv):
