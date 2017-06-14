@@ -41,7 +41,11 @@ def convert_test_image():
 
 def load(name='cifar10.pkl'):
     with open(name, 'rb') as data:
-        cifar10 = six.moves.cPickle.load(data, encoding='latin1')
+        if six.PY3:
+            cifar10 = six.moves.cPickle.load(data, encoding='latin1')
+        else:
+            cifar10 = six.moves.cPickle.load(data)
+
     return cifar10
 
 
